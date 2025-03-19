@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Moon } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -46,14 +47,13 @@ export default function RootLayout({
             </ul>
           </nav>
         </header>
-        {/* Main content */}
         <main className="flex-grow">{children}</main>
         <footer className="flex-col justify-items-center bg-gray-700">
           <h1>
             Footer
           </h1>
           <h2>
-            Link
+            <Moon/>
           </h2>
         </footer>
       </body>
