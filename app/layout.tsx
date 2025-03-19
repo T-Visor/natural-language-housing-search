@@ -23,30 +23,39 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <header className="py-2 px-6 flex justify-between dark:bg-gray-700 bg-white shadow-md">
-        <h1 className="text-xl dark:text-white text-black">
-          Header
-        </h1>
-        <nav>
-          <ul className="flex space-x-3">
-            <li>
-              <a href="#">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                Contact
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </header>
+    <html lang="en" className="h-full flex flex-col">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full flex flex-col`}
       >
-        {children}
+        <header className="py-2 px-6 flex justify-between dark:bg-gray-700 bg-white shadow-md">
+          <h1 className="text-xl dark:text-white text-black">
+            Header
+          </h1>
+          <nav>
+            <ul className="flex space-x-3">
+              <li>
+                <a href="#">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  Contact
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        {/* Main content */}
+        <main className="flex-grow">{children}</main>
+        <footer className="flex-col justify-items-center bg-gray-700">
+          <h1>
+            Footer
+          </h1>
+          <h2>
+            Link
+          </h2>
+        </footer>
       </body>
     </html>
   );
