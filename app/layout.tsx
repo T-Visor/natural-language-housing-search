@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Moon } from "lucide-react";
+
+const today = new Date();
+const thisYear = today.getFullYear();
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +24,7 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>){
   return (
     <html lang="en" className="h-full flex flex-col">
       <body
@@ -30,7 +32,7 @@ export default function RootLayout({
       >
         <header className="py-2 px-6 flex justify-between dark:bg-gray-700 bg-white shadow-md">
           <h1 className="text-xl dark:text-white text-black">
-            Header
+            Tailwind Practice Site
           </h1>
           <nav>
             <ul className="flex space-x-3">
@@ -49,12 +51,9 @@ export default function RootLayout({
         </header>
         <main className="flex-grow">{children}</main>
         <footer className="flex-col justify-items-center bg-gray-700">
-          <h1>
-            Footer
-          </h1>
-          <h2>
-            <Moon/>
-          </h2>
+          <p className="py-3 text-gray-300">
+            &copy; Company {thisYear} - All rights reserved
+          </p>
         </footer>
       </body>
     </html>
