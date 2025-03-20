@@ -1,9 +1,7 @@
-import Image from "next/image";
-
-export default function Home() {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <div>
-      Hello
-    </div>
-  );
+    <>
+      Hello (fill me in later)
+    </>
+  )
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
 
 const today = new Date();
 const thisYear = today.getFullYear();
@@ -24,9 +26,9 @@ export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>){
+}>) {
   return (
-    <html lang="en" className="h-full flex flex-col">
+    <html lang="en" className="dark h-full flex flex-col">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased h-full flex flex-col`}
       >
@@ -49,13 +51,24 @@ export default function RootLayout({
             </ul>
           </nav>
         </header>
-        <main className="flex-grow">{children}</main>
+
+        <SidebarProvider 
+          defaultOpen={true}
+          side="right"
+        > 
+          <AppSidebar />
+          <main className="flex-grow overflow-auto p-4">
+            <SidebarTrigger />
+            {children}
+          </main>
+        </SidebarProvider>
+
         <footer className="flex-col justify-items-center bg-gray-700">
           <p className="py-3 text-gray-300">
             &copy; Company {thisYear} - All rights reserved
           </p>
         </footer>
       </body>
-    </html>
+    </html >
   );
 }
