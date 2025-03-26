@@ -4,6 +4,7 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Switch } from "@/components/ui/switch"
+import {Sun, Moon } from "lucide-react"
 
 const today = new Date();
 const thisYear = today.getFullYear();
@@ -37,13 +38,16 @@ export default function RootLayout({
           <h1 className="text-xl dark:text-white text-black">
             Tailwind Practice Site
           </h1>
-          <Switch />
+          <div className="flex justify-between items-center space-x-2">
+            <Switch />
+            <Moon className="w-4 h-4"/>
+          </div>
         </header>
 
-        <SidebarProvider 
+        <SidebarProvider
           defaultOpen={true}
           side="right"
-        > 
+        >
           <AppSidebar />
           <main className="flex-grow overflow-auto p-4">
             <SidebarTrigger />
