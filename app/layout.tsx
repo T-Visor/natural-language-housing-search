@@ -4,7 +4,8 @@ import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { Switch } from "@/components/ui/switch"
-import {Sun, Moon } from "lucide-react"
+import { Sun, Moon } from "lucide-react"
+import 'leaflet/dist/leaflet.css';
 
 const today = new Date();
 const thisYear = today.getFullYear();
@@ -36,16 +37,16 @@ export default function RootLayout({
       >
         <header className="py-2 px-6 flex items-center justify-between dark:bg-gray-700 bg-white shadow-md">
           <h1 className="text-xl dark:text-white text-black">
-            Tailwind Practice Site
+            Tailwind Practice
           </h1>
           <div className="flex justify-between items-center space-x-2">
             <Switch />
-            <Moon className="w-4 h-4"/>
+            <Moon className="w-4 h-4" />
           </div>
         </header>
 
         <SidebarProvider
-          defaultOpen={true}
+          defaultOpen={false}
           side="right"
         >
           <AppSidebar />
