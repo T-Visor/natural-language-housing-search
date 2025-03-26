@@ -14,7 +14,7 @@ import {
 
 export function AppSidebar() {
   return (
-    <Sidebar variant="floating" className="top-10 bottom-20">
+    <Sidebar variant="floating" className="top-10 bottom-50">
       <SidebarHeader className="flex-col items-center justify-center">
         <h1>
           Search Form

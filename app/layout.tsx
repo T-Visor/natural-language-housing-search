@@ -43,16 +43,16 @@ export default function RootLayout({
           </div>
         </header>
 
-        {/* <SidebarProvider defaultOpen={false} side="right">
+        {/*<main className="flex-grow overflow-auto">
+            {children}
+          </main>*/}
+        <SidebarProvider defaultOpen={false} side="right">
           <AppSidebar />
-          <main className="flex-grow overflow-auto p-4">
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarProvider> */}
           <main className="flex-grow overflow-auto">
+            <SidebarTrigger className="z-0"/>
             {children}
           </main>
+        </SidebarProvider>
       </body>
     </html>
   );
