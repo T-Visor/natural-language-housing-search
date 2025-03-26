@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
-import { Switch } from "@/components/ui/switch"
-import { Sun, Moon } from "lucide-react"
-import 'leaflet/dist/leaflet.css';
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { Switch } from "@/components/ui/switch";
+import { Sun, Moon } from "lucide-react";
+import "leaflet/dist/leaflet.css";
 
 const today = new Date();
 const thisYear = today.getFullYear();
@@ -31,31 +31,29 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark h-screen">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col overflow-hidden`}
       >
         <header className="py-2 px-6 flex items-center justify-between dark:bg-gray-700 bg-white shadow-md">
-          <h1 className="text-xl dark:text-white text-black">
-            Tailwind Practice
-          </h1>
+          <h1 className="text-xl dark:text-white text-black">Tailwind Practice</h1>
           <div className="flex justify-between items-center space-x-2">
             <Switch />
             <Moon className="w-4 h-4" />
           </div>
         </header>
 
-        <SidebarProvider
-          defaultOpen={false}
-          side="right"
-        >
+        {/* <SidebarProvider defaultOpen={false} side="right">
           <AppSidebar />
           <main className="flex-grow overflow-auto p-4">
             <SidebarTrigger />
             {children}
           </main>
-        </SidebarProvider>
+        </SidebarProvider> */}
+          <main className="flex-grow overflow-auto">
+            {children}
+          </main>
       </body>
-    </html >
+    </html>
   );
 }

@@ -7,21 +7,25 @@ const position: LatLngExpression = [51.505, -0.09];
 
 export default function Map() {
   return (
-    <MapContainer
-      center={position}
-      zoom={13}
-      scrollWheelZoom={true}
-      className="h-full w-full z-0"
-    >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-      />
-      <Marker position={position}>
-        <Popup>
-          A pretty CSS3 popup. <br /> Easily customizable.
-        </Popup>
-      </Marker>
-    </MapContainer>
+    <div className="h-full w-full">
+      <MapContainer
+        center={position}
+        zoom={13}
+        scrollWheelZoom={true}
+        zoomControl={false}
+        className="h-full w-full"
+        attributionControl={false}
+      >
+        <TileLayer
+          attribution=''
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+        />
+        <Marker position={position}>
+          <Popup>
+            A pretty CSS3 popup. <br /> Easily customizable.
+          </Popup>
+        </Marker>
+      </MapContainer>
+    </div>
   );
 }
