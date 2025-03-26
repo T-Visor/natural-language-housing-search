@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
+import { Switch } from "@/components/ui/switch"
 
 const today = new Date();
 const thisYear = today.getFullYear();
@@ -28,28 +29,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark h-full flex flex-col">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-full flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
       >
-        <header className="py-2 px-6 flex justify-between dark:bg-gray-700 bg-white shadow-md">
+        <header className="py-2 px-6 flex items-center justify-between dark:bg-gray-700 bg-white shadow-md">
           <h1 className="text-xl dark:text-white text-black">
             Tailwind Practice Site
           </h1>
-          <nav>
-            <ul className="flex space-x-3">
-              <li>
-                <a href="#">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  Contact
-                </a>
-              </li>
-            </ul>
-          </nav>
+          <Switch />
         </header>
 
         <SidebarProvider 
@@ -62,12 +50,6 @@ export default function RootLayout({
             {children}
           </main>
         </SidebarProvider>
-
-        <footer className="flex-col justify-items-center bg-gray-700">
-          <p className="py-3 text-gray-300">
-            &copy; Company {thisYear} - All rights reserved
-          </p>
-        </footer>
       </body>
     </html >
   );
