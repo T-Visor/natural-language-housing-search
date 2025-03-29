@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Inter } from 'next/font/google'
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import "leaflet/dist/leaflet.css";
 
@@ -34,7 +34,6 @@ export default function RootLayout({
         <SidebarProvider defaultOpen={true}>
           <AppSidebar />
           <main className="flex-grow">
-            <SidebarTrigger/>
             {children}
           </main>
         </SidebarProvider>
