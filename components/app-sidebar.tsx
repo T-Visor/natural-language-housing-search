@@ -24,7 +24,7 @@ const searchResults = [
   },
 ]
 
-export function AppSidebar() {
+const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader className="flex flex-col items-center justify-center space-y-2 p-4">
@@ -53,3 +53,4 @@ export function AppSidebar() {
     </Sidebar>
   )
 }
+export default AppSidebar;
