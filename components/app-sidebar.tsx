@@ -14,10 +14,10 @@ import {
 
 export function AppSidebar() {
   return (
-    <Sidebar variant="floating" className="top-10 bottom-50">
+    <Sidebar>
       <SidebarHeader className="flex-col items-center justify-center">
         <h1>
-          Search Form
+          Search Results
         </h1>
       </SidebarHeader>
       <SidebarContent>

@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from 'next/font/google'
 import "./globals.css";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
-import { Switch } from "@/components/ui/switch";
-import { Sun, Moon } from "lucide-react";
 import "leaflet/dist/leaflet.css";
-
-const today = new Date();
-const thisYear = today.getFullYear();
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,23 +29,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-screen">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased h-screen flex flex-col overflow-hidden`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col overflow-hidden`}
       >
-        <header className="py-2 px-6 flex items-center justify-between dark:bg-gray-700 bg-white shadow-md">
-          <h1 className="text-xl dark:text-white text-black">Tailwind Practice</h1>
-          <div className="flex justify-between items-center space-x-2">
-            <Switch />
-            <Moon className="w-4 h-4" />
-          </div>
-        </header>
-
-        {/*<main className="flex-grow overflow-auto">
-            {children}
-          </main>*/}
-        <SidebarProvider defaultOpen={false} side="right">
+        <SidebarProvider defaultOpen={true}>
           <AppSidebar />
-          <main className="flex-grow overflow-auto">
-            <SidebarTrigger className="z-0"/>
+          <main className="flex-grow">
+            <SidebarTrigger/>
             {children}
           </main>
         </SidebarProvider>

@@ -8,6 +8,9 @@ const position: LatLngExpression = [51.505, -0.09];
 export default function Map() {
   return (
     <div className="h-full w-full">
+      <div className="h-12">
+        <span>Hello</span>
+      </div>
       <MapContainer
         center={position}
         zoom={13}
