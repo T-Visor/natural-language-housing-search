@@ -3,12 +3,19 @@
 import { useEffect } from "react"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
-import { LatLngExpression } from "leaflet";
+import L from "leaflet";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
 
-const position: LatLngExpression = [51.505, -0.09];
+const position = [51.505, -0.09]
+
+const customIcon = L.icon({
+  iconUrl: "/vercel.svg",
+  iconRetinaUrl: "/vercel.svg",
+  iconSize: [20, 20],
+  iconAnchor: [16, 32],
+})
 
 const MapResizeHandler = () => {
   const map = useMap();
@@ -31,12 +38,12 @@ const MapWithSearch = () => {
         <SidebarTrigger />
 
         {/* Vertical line separator*/}
-        <div className="h-6 w-px bg-gray-600" /> 
+        <div className="h-6 w-px bg-gray-600" />
 
         {/* Search bar with icon */}
         <div className="relative w-full">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input placeholder="Search" className="pl-9"/>
+          <Input placeholder="Search" className="pl-9" />
         </div>
 
         {/* Button to execute search */}
@@ -59,7 +66,10 @@ const MapWithSearch = () => {
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <Marker position={position}>
+        <Marker
+          position={position}
+          icon={customIcon}
+        >
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>

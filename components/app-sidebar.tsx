@@ -128,13 +128,6 @@ const searchResults = [
     Location: "Japan"
   },
   {
-    id: 18,
-    Name: "Sapiens: A Brief History of Humankind",
-    Author: "Yuval Noah Harari",
-    Date: "2011",
-    Location: "Israel"
-  },
-  {
     id: 19,
     Name: "The Kite Runner",
     Author: "Khaled Hosseini",
