@@ -9,10 +9,10 @@ import { Sparkles, Search } from "lucide-react"
 
 const position: LatLngExpression = [51.505, -0.09];
 
-export default function Map() {
+const Map = () => {
   return (
     <div className="h-full w-full">
-      <div className="py-2 flex items-center space-x-3 px-4">
+      <div className="py-2 flex items-center space-x-3 px-4 h-13">
         <SidebarTrigger />
 
         {/* Vertical line separator*/}
@@ -50,3 +50,4 @@ export default function Map() {
     </div>
   );
 }
+export default Map;
