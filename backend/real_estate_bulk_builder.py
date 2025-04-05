@@ -8,9 +8,9 @@ import simplejson as json  # swap standard json with simplejson
 # === Elasticsearch Config ===
 ES_HOST = 'http://localhost:9200'
 ES_USERNAME = 'elastic'
-ES_PASSWORD = 'K3ggKtqv'
+ES_PASSWORD = 'PO4SXCuy'
 INDEX_NAME = 'real_estate'
-CSV_INPUT = 'input_file.csv'
+CSV_INPUT = 'data/input_file.csv'
 MAPPING_FILE = 'real_estate_index_mapping.json'
 
 # === Logging ===
