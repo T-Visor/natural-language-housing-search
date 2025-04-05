@@ -151,21 +151,27 @@ const AppSidebar = () => {
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent className="flex flex-col">
-            {searchResults.map((result) => (
-              <Button
-                key={result.id}
-                variant="ghost"
-                className="w-full min-h-fit text-left flex flex-col items-start px-4 py-2 rounded-md hover:bg-gray-800 transition"
-              >
-                <div className="w-full flex flex-col">
-                  <span className="text-sm font-medium text-white">{result.Name}</span>
-                  <span className="text-xs text-gray-400">{result.Author}</span>
-                  <span className="text-xs text-gray-400">{result.Date}</span>
-                  <span className="text-xs text-gray-500 italic">{result.Location}</span>
+          <SidebarGroupContent className="p-4 overflow-auto">
+            <div className="grid grid-cols-1 gap-3">
+              {searchResults.map((result) => (
+                <div 
+                  key={result.id}
+                  className="w-full rounded-md overflow-hidden"
+                >
+                  <Button
+                    variant="ghost"
+                    className="w-full h-auto text-left flex flex-col items-start px-4 py-3 rounded-md hover:bg-gray-800 transition"
+                  >
+                    <div className="w-full flex flex-col">
+                      <span className="text-sm font-medium text-white mb-1">{result.Name}</span>
+                      <span className="text-xs text-gray-400 mb-0.5">{result.Author}</span>
+                      <span className="text-xs text-gray-400 mb-0.5">{result.Date}</span>
+                      <span className="text-xs text-gray-500 italic">{result.Location}</span>
+                    </div>
+                  </Button>
                 </div>
-              </Button>
-            ))}
+              ))}
+            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

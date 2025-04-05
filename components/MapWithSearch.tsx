@@ -33,7 +33,7 @@ const MapResizeHandler = () => {
 const MapWithSearch = () => {
   return (
     <div className="h-full w-full">
-      <div className="py-2 flex items-center space-x-3 px-4 h-13">
+      <div className="py-2 flex items-center space-x-3 px-4 h-13 border-b">
         {/* Button to control collapsible sidebar */}
         <SidebarTrigger />
 
