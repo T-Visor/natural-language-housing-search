@@ -2,13 +2,17 @@
 
 import { useEffect } from "react"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMap, Fit } from "react-leaflet";
 import L from "leaflet";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
 
-const position = [51.505, -0.09]
+const points: [number, number][] = [
+  [39.2904, -76.6122], // Baltimore
+  [38.9072, -77.0369], // DC
+  [40.7128, -74.0060], // NYC
+];
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -28,6 +32,19 @@ const MapResizeHandler = () => {
   }, [open, map]);
 
   return null;
+};
+
+const FitBoundsToMarkers = ({ points }: { points: [number, number][] }) => {
+  const map = useMap();
+
+  useEffect(() => {
+    if (points.length === 0) return;
+
+    const bounds = L.latLngBounds(points);
+    map.fitBounds(bounds, { padding: [50, 50] }); // optional padding
+  }, [points, map]);
+
+  return null; // doesn't render anything visible
 };
 
 const MapWithSearch = () => {
@@ -54,7 +71,6 @@ const MapWithSearch = () => {
 
       {/* Interactive Map*/}
       <MapContainer
-        center={position}
         zoom={13}
         scrollWheelZoom={true}
         zoomControl={false}
@@ -66,14 +82,12 @@ const MapWithSearch = () => {
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        <Marker
-          position={position}
-          icon={customIcon}
-        >
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
+      {points.map((position, index) => (
+        <Marker key={index} position={position} icon={customIcon}>
+          <Popup>Point {index + 1}</Popup>
         </Marker>
+      ))}
+      <FitBoundsToMarkers points={points} />
       </MapContainer>
     </div>
   );
