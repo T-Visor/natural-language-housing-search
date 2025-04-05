@@ -1,0 +1,46 @@
+{
+  "mappings": {
+    "properties": {
+      "property_id": { "type": "keyword" },
+      "property_url": { "type": "keyword" },
+      "address": {
+        "type": "text",
+        "fields": {
+          "raw": { "type": "keyword" }
+        }
+      },
+      "street_name": { "type": "keyword" },
+      "apartment": { "type": "keyword", "null_value": "N/A" },
+      "city": { "type": "keyword" },
+      "state": { "type": "keyword" },
+      "postcode": { "type": "keyword" },
+      "location": { "type": "geo_point" },
+      "price": { "type": "float" },
+      "bedroom_number": { "type": "float" },
+      "bathroom_number": { "type": "float" },
+      "price_per_unit": { "type": "float" },
+      "living_space": { "type": "float" },
+      "land_space": { "type": "float" },
+      "land_space_unit": { "type": "keyword" },
+      "broker_id": { "type": "keyword", "null_value": "N/A" },
+      "property_type": { "type": "keyword" },
+      "property_status": { "type": "keyword" },
+      "year_build": { "type": "short", "null_value": -1 },
+      "total_num_units": { "type": "short", "null_value": -1 },
+      "listing_age": { "type": "integer" },
+      "RunDate": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss||strict_date_optional_time"
+      },
+      "agency_name": {
+        "type": "text",
+        "fields": {
+          "raw": { "type": "keyword" }
+        }
+      },
+      "agent_name": { "type": "keyword", "null_value": "N/A" },
+      "agent_phone": { "type": "keyword", "null_value": "N/A" },
+      "is_owned_by_zillow": { "type": "boolean" }
+    }
+  }
+}
