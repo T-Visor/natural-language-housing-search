@@ -17,7 +17,7 @@ const searchResults = [
   },
   {
     id: 2,
-    Name: "Random Book",
+    Name: "Random Book with a really long title just for test purposes",
     Author: "T-Visor",
     Date: "2023 44",
     Location: "United States"
@@ -160,10 +160,10 @@ const AppSidebar = () => {
                 >
                   <Button
                     variant="ghost"
-                    className="w-full h-auto text-left flex flex-col items-start px-4 py-3 rounded-md hover:bg-gray-800 transition"
+                    className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                   >
                     <div className="w-full flex flex-col">
-                      <span className="text-sm font-medium text-white mb-1">{result.Name}</span>
+                      <span className="text-sm font-medium text-white mb-1 truncate">{result.Name}</span>
                       <span className="text-xs text-gray-400 mb-0.5">{result.Author}</span>
                       <span className="text-xs text-gray-400 mb-0.5">{result.Date}</span>
                       <span className="text-xs text-gray-500 italic">{result.Location}</span>
