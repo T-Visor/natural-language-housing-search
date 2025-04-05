@@ -153,8 +153,8 @@ const AppSidebar = () => {
         <SidebarGroup>
           <SidebarGroupContent className="p-4 overflow-auto">
             <div className="grid grid-cols-1 gap-3">
-              {searchResults.map((result) => (
-                <div 
+              {(searchResults.length > 0) ? (searchResults.map((result) => (
+                <div
                   key={result.id}
                   className="w-full rounded-md overflow-hidden"
                 >
@@ -170,7 +170,9 @@ const AppSidebar = () => {
                     </div>
                   </Button>
                 </div>
-              ))}
+              ))) : (
+                null
+              )}
             </div>
           </SidebarGroupContent>
         </SidebarGroup>
