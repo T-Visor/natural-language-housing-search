@@ -25,9 +25,10 @@ const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }
   const map = useMap();
 
   useEffect(() => {
-    if (!point || point.length !== 2) return;
-
-    map.setView(point, map.getZoom());
+    if (!point || point.length !== 2) 
+      return;
+    else
+      map.setView(point, map.getZoom());
   }, [point, map]);
 
   return null;
@@ -50,10 +51,12 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
   const map = useMap();
 
   useEffect(() => {
-    if (points.length === 0) return;
-
-    const bounds = L.latLngBounds(points);
-    map.fitBounds(bounds, { padding: [50, 50] }); // optional padding
+    if (points.length === 0) 
+      return;
+    else {
+      const bounds = L.latLngBounds(points);
+      map.fitBounds(bounds, { padding: [50, 50] }); // optional padding
+    }
   }, [points, map]);
 
   return null; // doesn't render anything visible
