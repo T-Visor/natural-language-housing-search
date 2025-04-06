@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import { MapContainer, TileLayer, Marker, Popup, useMap, Fit } from "react-leaflet";
 import L from "leaflet";
@@ -21,7 +21,19 @@ const customIcon = L.icon({
   iconAnchor: [16, 32],
 })
 
-const MapResizeHandler = () => {
+const CenterMapOnSelectedPoint = ({ point }: { point: [number, number] | null }) => {  
+  const map = useMap();
+
+  useEffect(() => {
+    if (!point || point.length !== 2) return;
+
+    map.setView(point, map.getZoom());
+  }, [point, map]);
+
+  return null;
+}
+
+const ResizeMapOnSidebarToggle = () => {
   const map = useMap();
   const open = useSidebar();
 
@@ -34,7 +46,7 @@ const MapResizeHandler = () => {
   return null;
 };
 
-const FitMapBoundsToMarkers = ({ points }: { points: [number, number][] }) => {
+const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -48,6 +60,12 @@ const FitMapBoundsToMarkers = ({ points }: { points: [number, number][] }) => {
 };
 
 const MapWithSearch = () => {
+  const [selectedPoint, setSelectedPoint] = useState<[number, number] | null>(null);
+
+  const handleMarkerClick = (point: [number, number]) => {
+    setSelectedPoint(point); // Update the selected point when the marker is clicked
+  };
+
   return (
     <div className="h-full w-full">
       <div className="py-2 flex items-center space-x-3 px-4 h-13 border-b">
@@ -77,7 +95,7 @@ const MapWithSearch = () => {
         className="h-full w-full"
         attributionControl={false}
       >
-        <MapResizeHandler />
+        <ResizeMapOnSidebarToggle />
         <TileLayer
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -87,11 +105,15 @@ const MapWithSearch = () => {
             key={index} 
             position={position} 
             icon={customIcon}
+            eventHandlers={{
+              click: () => handleMarkerClick(position),
+            }}
           >
             <Popup>Point {index + 1}</Popup>
           </Marker>
         ))}
-        <FitMapBoundsToMarkers points={points} />
+        <FitMapBoundsAroundMarkers points={points} />
+        <CenterMapOnSelectedPoint point={selectedPoint}/>
       </MapContainer>
     </div>
   );
