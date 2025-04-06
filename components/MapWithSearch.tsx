@@ -21,7 +21,7 @@ const customIcon = L.icon({
   iconAnchor: [16, 32],
 })
 
-const CenterMapOnSelectedPoint = ({ point }: { point: [number, number] | null }) => {  
+const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {  
   const map = useMap();
 
   useEffect(() => {
@@ -60,11 +60,7 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
 };
 
 const MapWithSearch = () => {
-  const [selectedPoint, setSelectedPoint] = useState<[number, number] | null>(null);
-
-  const handleMarkerClick = (point: [number, number]) => {
-    setSelectedPoint(point); // Update the selected point when the marker is clicked
-  };
+  const [position, setPosition] = useState<[number, number] | null>(null);
 
   return (
     <div className="h-full w-full">
@@ -106,14 +102,12 @@ const MapWithSearch = () => {
             position={position} 
             icon={customIcon}
             eventHandlers={{
-              click: () => handleMarkerClick(position),
+              click: () => setPosition(position),
             }}
-          >
-            <Popup>Point {index + 1}</Popup>
-          </Marker>
+          />
         ))}
         <FitMapBoundsAroundMarkers points={points} />
-        <CenterMapOnSelectedPoint point={selectedPoint}/>
+        <CenterMapOnSelectedMarker point={position}/>
       </MapContainer>
     </div>
   );
