@@ -34,7 +34,7 @@ const MapResizeHandler = () => {
   return null;
 };
 
-const FitBoundsToMarkers = ({ points }: { points: [number, number][] }) => {
+const FitMapBoundsToMarkers = ({ points }: { points: [number, number][] }) => {
   const map = useMap();
 
   useEffect(() => {
@@ -82,12 +82,16 @@ const MapWithSearch = () => {
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-      {points.map((position, index) => (
-        <Marker key={index} position={position} icon={customIcon}>
-          <Popup>Point {index + 1}</Popup>
-        </Marker>
-      ))}
-      <FitBoundsToMarkers points={points} />
+        {points.map((position, index) => (
+          <Marker 
+            key={index} 
+            position={position} 
+            icon={customIcon}
+          >
+            <Popup>Point {index + 1}</Popup>
+          </Marker>
+        ))}
+        <FitMapBoundsToMarkers points={points} />
       </MapContainer>
     </div>
   );
