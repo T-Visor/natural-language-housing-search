@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
 
-const points: [number, number][] = [
+const sampleCoordinates: [number, number][] = [
   [39.2904, -76.6122], // Baltimore
   [38.9072, -77.0369], // DC
   [40.7128, -74.0060], // NYC
@@ -31,7 +31,7 @@ const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }
       map.setView(point, map.getZoom());
   }, [point, map]);
 
-  return null;
+  return null; // doesn't render anything visible
 }
 
 const ResizeMapOnSidebarToggle = () => {
@@ -44,7 +44,7 @@ const ResizeMapOnSidebarToggle = () => {
     }, 200); // small delay gives layout time to settle
   }, [open, map]);
 
-  return null;
+  return null; // doesn't render anything visible
 };
 
 const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) => {
@@ -63,7 +63,7 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
 };
 
 const MapWithSearch = () => {
-  const [position, setPosition] = useState<[number, number] | null>(null);
+  const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
 
   return (
     <div className="h-full w-full">
@@ -94,23 +94,23 @@ const MapWithSearch = () => {
         className="h-full w-full"
         attributionControl={false}
       >
-        <ResizeMapOnSidebarToggle />
         <TileLayer
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        {points.map((position, index) => (
+        {sampleCoordinates.map((point, index) => (
           <Marker 
             key={index} 
-            position={position} 
+            position={point} 
             icon={customIcon}
             eventHandlers={{
-              click: () => setPosition(position),
+              click: () => setMouseClickPoint(point),
             }}
           />
         ))}
-        <FitMapBoundsAroundMarkers points={points} />
-        <CenterMapOnSelectedMarker point={position}/>
+        <ResizeMapOnSidebarToggle />
+        <FitMapBoundsAroundMarkers points={sampleCoordinates} />
+        <CenterMapOnSelectedMarker point={mouseClickPoint}/>
       </MapContainer>
     </div>
   );
