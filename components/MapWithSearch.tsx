@@ -7,12 +7,7 @@ import L from "leaflet";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
-
-const sampleCoordinates: [number, number][] = [
-  [39.2904, -76.6122], // Baltimore
-  [38.9072, -77.0369], // DC
-  [40.7128, -74.0060], // NYC
-];
+import axios from "axios"
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -25,7 +20,7 @@ const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }
   const map = useMap();
 
   useEffect(() => {
-    if (!point || point.length !== 2) 
+    if (!point) 
       return;
     else
       map.setView(point, map.getZoom());
@@ -62,8 +57,24 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
   return null; // doesn't render anything visible
 };
 
-const MapWithSearch = () => {
+const MapWithSearch = () => {  
+
   const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
+  const [coordinates, setCoordinates] = useState<Type[]>([])
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const results = await axios.get("/api/housing-search");
+        setCoordinates(results.data.map(hit => hit._source.location));
+      }
+      catch (error) {
+        console.error(error);
+        setCoordinates([40.7128, 74.0060])
+      }
+    }
+    fetchCoordinates();
+  }, [])
 
   return (
     <div className="h-full w-full">
@@ -98,7 +109,7 @@ const MapWithSearch = () => {
           attribution=""
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
-        {sampleCoordinates.map((point, index) => (
+        {coordinates.map((point, index) => (
           <Marker 
             key={index} 
             position={point} 
@@ -109,7 +120,7 @@ const MapWithSearch = () => {
           />
         ))}
         <ResizeMapOnSidebarToggle />
-        <FitMapBoundsAroundMarkers points={sampleCoordinates} />
+        <FitMapBoundsAroundMarkers points={coordinates} />
         <CenterMapOnSelectedMarker point={mouseClickPoint}/>
       </MapContainer>
     </div>
