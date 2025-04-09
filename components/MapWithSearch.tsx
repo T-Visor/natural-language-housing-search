@@ -70,7 +70,6 @@ const MapWithSearch = () => {
       }
       catch (error) {
         console.error(error);
-        setCoordinates([40.7128, 74.0060])
       }
     }
     fetchCoordinates();
@@ -99,7 +98,8 @@ const MapWithSearch = () => {
 
       {/* Interactive Map*/}
       <MapContainer
-        zoom={13}
+        center={[39.2904, -76.6122]}
+        zoom={5}
         scrollWheelZoom={true}
         zoomControl={false}
         className="h-full w-full"
