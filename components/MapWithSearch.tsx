@@ -70,7 +70,6 @@ const MapWithSearch = () => {
         {/* Vertical line separator */}
         <div className="h-6 w-px bg-gray-600" />
 
-        {/* Search bar form */}
         <form
           onSubmit={(e) => {
             e.preventDefault(); // prevents page from refreshing
@@ -87,7 +86,6 @@ const MapWithSearch = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-
             {/* Clears the search bar */}
             <Button
               className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
