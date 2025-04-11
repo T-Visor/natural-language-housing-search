@@ -55,9 +55,8 @@ const AppSidebar = () => {
                   >
                     <div className="w-full flex flex-col">
                       <span className="text-base font-medium text-white mb-1">{`${formatCurrency(result._source.price)}`}</span>
-                      <span className="text-sm text-gray-400 mb-0.5 truncate">{result._source.address}</span>
-                      <span className="text-sm text-gray-400 mb-0.5">{result._source.city}</span>
-                      <span className="text-sm text-gray-500 mb-0.5 italic">{result._source.state}</span>
+                      <span className="text-sm text-gray-400 mb-0.5">{`${result._source.bedroom_number} bed | ${result._source.bathroom_number} bath`}</span>
+                      <span className="text-sm text-gray-400 mb-0.5 truncate whitespace-pre-line">{result._source.address.replace(",", "\n")}</span>
                       <a 
                         className="text-sm text-blue-500"
                         href={result._source.property_url}
