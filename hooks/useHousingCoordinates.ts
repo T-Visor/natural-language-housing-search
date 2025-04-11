@@ -15,7 +15,6 @@ const useHousingCoordinates = () => {
         console.error("Error fetching coordinates:", error)
       }
     }
-
     fetchData()
   }, [])
 
