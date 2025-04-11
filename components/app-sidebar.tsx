@@ -54,10 +54,17 @@ const AppSidebar = () => {
                     className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                   >
                     <div className="w-full flex flex-col">
-                      <span className="text-sm font-medium text-white mb-1">{`${formatCurrency(result._source.price)}`}</span>
-                      <span className="text-xs text-gray-400 mb-0.5 truncate">{result._source.address}</span>
-                      <span className="text-xs text-gray-400 mb-0.5">{result._source.city}</span>
-                      <span className="text-xs text-gray-500 italic">{result._source.state}</span>
+                      <span className="text-base font-medium text-white mb-1">{`${formatCurrency(result._source.price)}`}</span>
+                      <span className="text-sm text-gray-400 mb-0.5 truncate">{result._source.address}</span>
+                      <span className="text-sm text-gray-400 mb-0.5">{result._source.city}</span>
+                      <span className="text-sm text-gray-500 mb-0.5 italic">{result._source.state}</span>
+                      <a 
+                        className="text-sm text-blue-500"
+                        href={result._source.property_url}
+                        target="_blank" 
+                      >
+                        View Source
+                      </a>
                     </div>
                   </Button>
                 </div>
