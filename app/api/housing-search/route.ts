@@ -29,7 +29,8 @@ export async function GET() {
     body: {
       query: {
         "match_all": {}
-      }
+      },
+      size: 30
     }
   });
 
