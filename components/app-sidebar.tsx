@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import {
   Sidebar,
@@ -7,6 +9,7 @@ import {
   SidebarHeader
 } from "@/components/ui/sidebar"
 import fetchSearchResults from "@/lib/fetchSearchResults"
+import { useEffect, useState } from "react";
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -16,8 +19,16 @@ const formatCurrency = (number: number) => {
   }).format(number);
 }
 
-const AppSidebar = async () => {
-  const searchResults = await fetchSearchResults();
+const AppSidebar = () => {
+  const [searchResults, setSearchResults] = useState([]);
+
+  useEffect(() => {
+    const getSearchResults = async () => {
+      const results = await fetchSearchResults();
+      setSearchResults(results);
+    };
+    getSearchResults();
+  }, []);
 
   return (
     <Sidebar>
@@ -38,11 +49,16 @@ const AppSidebar = async () => {
                     className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                   >
                     <div className="w-full flex flex-col">
-                      <span className="text-base font-medium text-white mb-1">{`${formatCurrency(result._source.price)}`}</span>
-                      <span className="text-sm text-gray-400 mb-0.5">
-                        {`${result._source.bedroom_number ?? 0} bed | ${result._source.bathroom_number ?? 0} bath`}
+                      <span className="text-base font-medium text-white mb-1">
+                        {`${formatCurrency(result._source.price)}`}
                       </span>
-                      <span className="text-sm text-gray-400 mb-0.5 truncate whitespace-pre-line">{result._source.address.replace(",", "\n")}</span>
+                      <span className="text-sm text-gray-400 mb-0.5">
+                        {`${result._source.bedroom_number ?? 0} bed | 
+                          ${result._source.bathroom_number ?? 0} bath`}
+                      </span>
+                      <span className="text-sm text-gray-400 mb-0.5 truncate whitespace-pre-line">
+                        {result._source.address.replace(",", "\n")}
+                      </span>
                       <a 
                         className="text-sm text-blue-500"
                         href={result._source.property_url}
