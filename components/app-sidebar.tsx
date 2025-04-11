@@ -1,5 +1,3 @@
-"use client"
-
 import { Button } from "@/components/ui/button"
 import {
   Sidebar,
@@ -8,8 +6,16 @@ import {
   SidebarGroupContent,
   SidebarHeader
 } from "@/components/ui/sidebar"
-import axios from "axios"
-import { useState, useEffect } from "react"
+
+const fetchSearchResults = async () => {
+  const results = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/housing-search`, { cache: "no-store" })
+
+  if (!results.ok) {
+    throw new Error("Failed to fetch search results");
+  }
+
+  return results.json();
+}
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -19,21 +25,8 @@ const formatCurrency = (number: number) => {
   }).format(number);
 }
 
-const AppSidebar = () => {
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      try {
-        const results = await axios.get("/api/housing-search");
-        setSearchResults(results.data);
-      }
-      catch (error) {
-        console.error(error);
-      }
-    }
-    fetchSearchResults();
-  }, [])
+const AppSidebar = async () => {
+  const searchResults = await fetchSearchResults();
 
   return (
     <Sidebar>

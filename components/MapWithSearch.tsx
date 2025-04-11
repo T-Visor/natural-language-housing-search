@@ -16,11 +16,30 @@ const customIcon = L.icon({
   iconAnchor: [16, 32],
 })
 
-const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {  
+const useHousingCoordinates = () => {
+  const [coordinates, setCoordinates] = useState<Type[]>([])
+
+  useEffect(() => {
+    const fetchCoordinates = async () => {
+      try {
+        const results = await axios.get("/api/housing-search");
+        setCoordinates(results.data.map(hit => hit._source.location));
+      }
+      catch (error) {
+        console.error(error);
+      }
+    }
+    fetchCoordinates();
+  }, [])
+
+  return coordinates;
+}
+
+const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {
   const map = useMap();
 
   useEffect(() => {
-    if (!point) 
+    if (!point)
       return;
     else
       map.setView(point, map.getZoom());
@@ -46,7 +65,7 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
   const map = useMap();
 
   useEffect(() => {
-    if (points.length === 0) 
+    if (points.length === 0)
       return;
     else {
       const bounds = L.latLngBounds(points);
@@ -57,23 +76,9 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
   return null; // doesn't render anything visible
 };
 
-const MapWithSearch = () => {  
-
+const MapWithSearch = () => {
+  const coordinates = useHousingCoordinates();
   const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
-  const [coordinates, setCoordinates] = useState<Type[]>([])
-
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      try {
-        const results = await axios.get("/api/housing-search");
-        setCoordinates(results.data.map(hit => hit._source.location));
-      }
-      catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCoordinates();
-  }, [])
 
   return (
     <div className="h-full w-full">
@@ -110,9 +115,9 @@ const MapWithSearch = () => {
           url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
         />
         {coordinates.map((point, index) => (
-          <Marker 
-            key={index} 
-            position={point} 
+          <Marker
+            key={index}
+            position={point}
             icon={customIcon}
             eventHandlers={{
               click: () => setMouseClickPoint(point),
@@ -121,9 +126,10 @@ const MapWithSearch = () => {
         ))}
         <ResizeMapOnSidebarToggle />
         <FitMapBoundsAroundMarkers points={coordinates} />
-        <CenterMapOnSelectedMarker point={mouseClickPoint}/>
+        <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>
   );
 }
+
 export default MapWithSearch;
