@@ -73,12 +73,13 @@ const MapWithSearch = () => {
         {/* Search bar form */}
         <form
           onSubmit={(e) => {
-            e.preventDefault();
+            e.preventDefault(); // prevents page from refreshing
             alert(searchQuery)
           }}
           className="flex items-center space-x-3 w-full"
         >
           <div className="relative w-full">
+            {/* Search bar with icon */}
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search"
@@ -86,6 +87,16 @@ const MapWithSearch = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
+
+            {/* Clears the search bar */}
+            <Button
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+              variant="ghost"
+              type="button" // important so it doesn't submit
+              onClick={() => setSearchQuery("")}
+            >
+              X
+            </Button>
           </div>
           <Button type="submit">
             <Sparkles />
