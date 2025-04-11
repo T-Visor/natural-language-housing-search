@@ -6,16 +6,7 @@ import {
   SidebarGroupContent,
   SidebarHeader
 } from "@/components/ui/sidebar"
-
-const fetchSearchResults = async () => {
-  const results = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/housing-search`, { cache: "no-store" })
-
-  if (!results.ok) {
-    throw new Error("Failed to fetch search results");
-  }
-
-  return results.json();
-}
+import fetchSearchResults from "@/lib/fetchSearchResults"
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {

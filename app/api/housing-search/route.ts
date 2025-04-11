@@ -1,19 +1,31 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Client } from "@elastic/elasticsearch"
 
-const elasticsearchIndex = "real_estate";
+const {
+  ELASTICSEARCH_API_URL,
+  ELASTICSEARCH_USERNAME,
+  ELASTICSEARCH_PASSWORD,
+  ELASTICSEARCH_INDEX,
+} = process.env;
+
+if (!ELASTICSEARCH_API_URL ||
+    !ELASTICSEARCH_USERNAME ||
+    !ELASTICSEARCH_PASSWORD ||
+    !ELASTICSEARCH_INDEX) {
+  throw new Error("Missing required environment variables for Elasticsearch client.");
+}
 
 const client = new Client({
-  node: "http://localhost:9200",
+  node: ELASTICSEARCH_API_URL,
   auth: {
-    username: "elastic",
-    password: "PO4SXCuy"
-  }
+    username: ELASTICSEARCH_USERNAME,
+    password: ELASTICSEARCH_PASSWORD,
+  },
 });
 
 export async function GET() {
   const result = await client.search({
-    index: elasticsearchIndex,
+    index: ELASTICSEARCH_INDEX,
     body: {
       query: {
         "match_all": {}

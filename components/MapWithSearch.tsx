@@ -7,7 +7,7 @@ import L from "leaflet";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
-import axios from "axios"
+import useHousingCoordinates from "@/hooks/useHousingCoordinates"
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -15,25 +15,6 @@ const customIcon = L.icon({
   iconSize: [20, 20],
   iconAnchor: [16, 32],
 })
-
-const useHousingCoordinates = () => {
-  const [coordinates, setCoordinates] = useState<Type[]>([])
-
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      try {
-        const results = await axios.get("/api/housing-search");
-        setCoordinates(results.data.map(hit => hit._source.location));
-      }
-      catch (error) {
-        console.error(error);
-      }
-    }
-    fetchCoordinates();
-  }, [])
-
-  return coordinates;
-}
 
 const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {
   const map = useMap();
