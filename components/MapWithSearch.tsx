@@ -20,10 +20,8 @@ const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }
   const map = useMap();
 
   useEffect(() => {
-    if (!point)
-      return;
-    else
-      map.setView(point, map.getZoom());
+    if (!point) return;
+    map.setView(point, map.getZoom());
   }, [point, map]);
 
   return null; // doesn't render anything visible
@@ -58,29 +56,43 @@ const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) =
 };
 
 const MapWithSearch = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const coordinates = useHousingCoordinates();
   const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
 
   return (
     <div className="h-full w-full">
       <div className="py-2 flex items-center space-x-3 px-4 h-13 border-b">
-        {/* Button to control collapsible sidebar */}
+
+        {/* Sidebar trigger button */}
         <SidebarTrigger />
 
-        {/* Vertical line separator*/}
+        {/* Vertical line separator */}
         <div className="h-6 w-px bg-gray-600" />
 
-        {/* Search bar with icon */}
-        <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-          <Input placeholder="Search" className="pl-9" />
-        </div>
-
-        {/* Button to execute search */}
-        <Button>
-          <Sparkles />
-        </Button>
+        {/* Search bar form */}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            alert(searchQuery)
+          }}
+          className="flex items-center space-x-3 w-full"
+        >
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Input
+              placeholder="Search"
+              className="pl-9"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button type="submit">
+            <Sparkles />
+          </Button>
+        </form>
       </div>
+
 
       {/* Interactive Map*/}
       <MapContainer
