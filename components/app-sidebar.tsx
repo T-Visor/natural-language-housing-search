@@ -1,14 +1,15 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader
-} from "@/components/ui/sidebar"
-import fetchSearchResults from "@/lib/fetchSearchResults"
+} from "@/components/ui/sidebar";
+import getSearchResults from "@/lib/getSearchResults";
+import useSearchResultsStore from "@/store/useSearchResultsStore";
 import { useEffect, useState } from "react";
 
 const formatCurrency = (number: number) => {
@@ -20,15 +21,7 @@ const formatCurrency = (number: number) => {
 }
 
 const AppSidebar = () => {
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
-    const getSearchResults = async () => {
-      const results = await fetchSearchResults();
-      setSearchResults(results);
-    };
-    getSearchResults();
-  }, []);
+  const searchResults = useSearchResultsStore((state) => state.searchResults);
 
   return (
     <Sidebar>

@@ -1,24 +1,25 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import fetchSearchResults from "@/lib/fetchSearchResults"
+import getSearchResults from "@/lib/getSearchResults"
+import useSearchResultsStore from "@/store/useSearchResultsStore"
 
 const useHousingCoordinates = () => {
-  const [coordinates, setCoordinates] = useState<[number, number][]>([])
+  const searchResults = useSearchResultsStore((state) => state.searchResults);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const results = await fetchSearchResults()
-        setCoordinates(results.map(hit => hit._source.location))
+        await getSearchResults();
       } catch (error) {
-        console.error("Error fetching coordinates:", error)
+        console.error("Error fetching coordinates:", error);
       }
     }
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
-  return coordinates
+  const coordinates = searchResults.map(hit => hit._source.location);
+  return coordinates;
 }
 
-export default useHousingCoordinates
+export default useHousingCoordinates;
