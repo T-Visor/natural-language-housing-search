@@ -1,8 +1,8 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import getSearchResults from "@/lib/getSearchResults"
-import useSearchResultsStore from "@/store/useSearchResultsStore"
+import { useState, useEffect } from "react";
+import getSearchResults from "@/lib/getSearchResults";
+import useSearchResultsStore from "@/store/useSearchResultsStore";
 
 const useHousingCoordinates = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
