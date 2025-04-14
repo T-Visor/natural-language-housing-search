@@ -2,12 +2,15 @@
 
 import { useEffect, useState } from "react"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
-import { MapContainer, TileLayer, Marker, Popup, useMap, Fit } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Search } from "lucide-react"
 import useHousingCoordinates from "@/hooks/useHousingCoordinates"
+import { CenterMapOnSelectedMarker, ResizeMapOnSidebarToggle, FitMapBoundsAroundMarkers } from "./MapEffects"
+import useSearchResultsStore from "@/store/useSearchResultsStore";
+import getSearchResults from "@/lib/getSearchResults"
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -16,49 +19,21 @@ const customIcon = L.icon({
   iconAnchor: [16, 32],
 })
 
-const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!point) return;
-    map.setView(point, map.getZoom());
-  }, [point, map]);
-
-  return null; // doesn't render anything visible
-}
-
-const ResizeMapOnSidebarToggle = () => {
-  const map = useMap();
-  const open = useSidebar();
-
-  useEffect(() => {
-    setTimeout(() => {
-      map.invalidateSize();
-    }, 200); // small delay gives layout time to settle
-  }, [open, map]);
-
-  return null; // doesn't render anything visible
-};
-
-const FitMapBoundsAroundMarkers = ({ points }: { points: [number, number][] }) => {
-  const map = useMap();
-
-  useEffect(() => {
-    if (points.length === 0)
-      return;
-    else {
-      const bounds = L.latLngBounds(points);
-      map.fitBounds(bounds, { padding: [50, 50] }); // optional padding
-    }
-  }, [points, map]);
-
-  return null; // doesn't render anything visible
-};
-
 const MapWithSearch = () => {
-  const [searchQuery, setSearchQuery] = useState("");
   const coordinates = useHousingCoordinates();
+  const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getSearchResults();
+      } catch (error) {
+        console.error("Error fetching coordinates:", error);
+      }
+    }
+    fetchData();
+  }, [setSearchResults]);
 
   return (
     <div className="h-full w-full">
@@ -102,7 +77,6 @@ const MapWithSearch = () => {
         </form>
       </div>
 
-
       {/* Interactive Map*/}
       <MapContainer
         center={[39.2904, -76.6122]}
@@ -127,7 +101,7 @@ const MapWithSearch = () => {
           />
         ))}
         <ResizeMapOnSidebarToggle />
-        {mouseClickPoint === null && <FitMapBoundsAroundMarkers points={coordinates}/>}
+        <FitMapBoundsAroundMarkers points={coordinates} />
         <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>
