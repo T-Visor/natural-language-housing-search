@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { useSidebar } from "@/components/ui/sidebar";
 import { useMap } from "react-leaflet";
 
 const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }) => {

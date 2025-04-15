@@ -1,16 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react"
-import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
+import { useState } from "react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Sparkles, Search } from "lucide-react"
-import useHousingCoordinates from "@/hooks/useHousingCoordinates"
-import { CenterMapOnSelectedMarker, ResizeMapOnSidebarToggle, FitMapBoundsAroundMarkers } from "./MapEffects"
-import useSearchResultsStore from "@/store/useSearchResultsStore";
-import getSearchResults from "@/lib/getSearchResults"
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Sparkles, Search } from "lucide-react";
+import useHousingCoordinates from "@/hooks/useHousingCoordinates";
+import { 
+  CenterMapOnSelectedMarker, 
+  ResizeMapOnSidebarToggle, 
+  FitMapBoundsAroundMarkers 
+} from "./MapEffects";
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -20,20 +22,9 @@ const customIcon = L.icon({
 })
 
 const MapWithSearch = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const coordinates = useHousingCoordinates();
-  const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        await getSearchResults();
-      } catch (error) {
-        console.error("Error fetching coordinates:", error);
-      }
-    }
-    fetchData();
-  }, [setSearchResults]);
 
   return (
     <div className="h-full w-full">
@@ -62,14 +53,14 @@ const MapWithSearch = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {/* Clears the search bar */}
-            <Button
+            {searchQuery && <Button
               className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
               variant="ghost"
               type="button" // important so it doesn't submit
               onClick={() => setSearchQuery("")}
             >
               X
-            </Button>
+            </Button>}
           </div>
           <Button type="submit">
             <Sparkles />
@@ -101,7 +92,7 @@ const MapWithSearch = () => {
           />
         ))}
         <ResizeMapOnSidebarToggle />
-        <FitMapBoundsAroundMarkers points={coordinates} />
+        {!mouseClickPoint && <FitMapBoundsAroundMarkers points={coordinates}/>}
         <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>
