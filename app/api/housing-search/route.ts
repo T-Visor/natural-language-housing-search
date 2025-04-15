@@ -23,15 +23,12 @@ const client = new Client({
   },
 });
 
-export async function GET() {
+export async function POST(request: NextRequest) {
+  const body = await request.json();
+
   const result = await client.search({
     index: ELASTICSEARCH_INDEX,
-    body: {
-      query: {
-        "match_all": {}
-      },
-      size: 30
-    }
+    body
   });
 
   return NextResponse.json(result.hits.hits);
