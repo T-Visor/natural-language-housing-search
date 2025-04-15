@@ -8,9 +8,7 @@ import {
   SidebarGroupContent,
   SidebarHeader
 } from "@/components/ui/sidebar";
-import getSearchResults from "@/lib/getSearchResults";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
-import { useEffect, useState } from "react";
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -22,6 +20,7 @@ const formatCurrency = (number: number) => {
 
 const AppSidebar = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
+  const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
 
   return (
     <Sidebar>
@@ -39,6 +38,7 @@ const AppSidebar = () => {
                 >
                   <Button
                     variant="ghost"
+                    onClick={() => setMouseClickPoint(result._source.location)}
                     className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                   >
                     <div className="w-full flex flex-col">

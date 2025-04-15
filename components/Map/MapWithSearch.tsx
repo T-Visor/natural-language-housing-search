@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Search } from "lucide-react";
 import useHousingCoordinates from "@/hooks/useHousingCoordinates";
+import useSearchResultsStore from "@/store/useSearchResultsStore";
 import { 
   CenterMapOnSelectedMarker, 
   ResizeMapOnSidebarToggle, 
@@ -24,7 +25,9 @@ const customIcon = L.icon({
 const MapWithSearch = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const coordinates = useHousingCoordinates();
-  const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
+  //const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
+  const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
+  const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
 
   return (
     <div className="h-full w-full">
