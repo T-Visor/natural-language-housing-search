@@ -87,14 +87,14 @@ const MapWithSearch = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {/* Clears the search bar */}
-            <Button
+            {searchQuery && <Button
               className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
               variant="ghost"
               type="button" // important so it doesn't submit
               onClick={() => setSearchQuery("")}
             >
               X
-            </Button>
+            </Button>}
           </div>
           <Button type="submit">
             <Sparkles />
