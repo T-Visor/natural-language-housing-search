@@ -1,0 +1,43 @@
+{
+  "real_estate": {
+    "mappings": {
+      "properties": {
+        "address": {
+          "type": "text",
+          "fields": {
+            "raw": {
+              "type": "keyword"
+            }
+          }
+        },
+        "bathroom_number": {
+          "type": "float"
+        },
+        "bedroom_number": {
+          "type": "float"
+        },
+        "city": {
+          "type": "keyword"
+        },
+        "living_space": {
+          "type": "float"
+        },
+        "location": {
+          "type": "geo_point"
+        },
+        "postcode": {
+          "type": "keyword"
+        },
+        "price": {
+          "type": "float"
+        },
+        "state": {
+          "type": "keyword"
+        },
+        "street_name": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
