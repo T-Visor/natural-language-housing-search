@@ -3,6 +3,11 @@ import { readFile } from "fs/promises";
 import ollama from "ollama";
 import { CONFIG } from "./config";
 import { Client } from "@elastic/elasticsearch";
+import { z } from 'zod';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+
+const ElasticQuery = z.object({
+});
 
 /**
  * Queries Elasticsearch using a natural language prompt.
@@ -14,10 +19,15 @@ export const queryElasticUsingNaturalLanguage = async (query: string) => {
   const elasticsearchMapping = await loadJsonFromFile(CONFIG.ELASTICSEARCH_MAPPING_PATH);
   const prompt = buildPrompt(CONFIG.PROMPT_TEMPLATE, elasticsearchMapping, query);
   const elasticQuery = await generateElasticQueryFromPrompt(prompt);
+  console.log(elasticQuery);
   const elasticQueryAsJSON = JSON.parse(elasticQuery);
 
   const client = new Client({
-    node: CONFIG.ELASTICSEARCH_API_URL,
+    node: process.env.ELASTICSEARCH_API_URL,
+    auth: {
+      username: process.env.ELASTICSEARCH_USERNAME!,
+      password: process.env.ELASTICSEARCH_PASSWORD!,
+    },
   });
 
   const searchResults = await client.search({
@@ -71,7 +81,8 @@ const generateElasticQueryFromPrompt = async (prompt: string) => {
     ],
     options: {
       temperature: 0
-    }
+    },
+    format: ElasticQuery
   });
 
   return response.message.content;

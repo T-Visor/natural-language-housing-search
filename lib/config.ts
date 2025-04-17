@@ -4,9 +4,9 @@ export const CONFIG = {
 
   ELASTICSEARCH_INDEX: "real_estate",
 
-  ELASTICSEARCH_MAPPING_PATH: "./mapping.json",
+  ELASTICSEARCH_MAPPING_PATH: "lib/mapping.json",
 
-  LANGUAGE_MODEL_NAME: "mistral:7b-instruct",
+  LANGUAGE_MODEL_NAME: "llama3.1:8b-instruct-q3_K_S",
 
   SYSTEM_PROMPT: `
       You are an Elasticsearch query generator. 
