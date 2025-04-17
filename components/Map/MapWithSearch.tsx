@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { ReactEventHandler, useState } from "react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search } from "lucide-react";
+import { Sparkles, Search, Loader } from "lucide-react";
 import useHousingCoordinates from "@/hooks/useHousingCoordinates";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import { 
@@ -14,6 +14,7 @@ import {
   ResizeMapOnSidebarToggle, 
   FitMapBoundsAroundMarkers 
 } from "./MapEffects";
+import axios from "axios";
 
 const customIcon = L.icon({
   iconUrl: "/vercel.svg",
@@ -23,11 +24,22 @@ const customIcon = L.icon({
 })
 
 const MapWithSearch = () => {
+  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const coordinates = useHousingCoordinates();
-  //const [mouseClickPoint, setMouseClickPoint] = useState<[number, number] | null>(null);
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
   const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
+
+  const handleFormSubmit = async (event: React.FormEvent) => {
+    event.preventDefault(); // prevents page from refreshing
+
+    if (searchQuery.trim() === "") return;
+    
+    setIsSearching(true);
+    const results = await axios.post("/api/query-elastic-using-nl", { query: searchQuery });
+    setIsSearching(false);
+    console.log(results);                          
+  }
 
   return (
     <div className="h-full w-full">
@@ -40,10 +52,7 @@ const MapWithSearch = () => {
         <div className="h-6 w-px bg-gray-600" />
 
         <form
-          onSubmit={(e) => {
-            e.preventDefault(); // prevents page from refreshing
-            alert(searchQuery)
-          }}
+          onSubmit={handleFormSubmit}
           className="flex items-center space-x-3 w-full"
         >
           <div className="relative w-full">
@@ -51,13 +60,15 @@ const MapWithSearch = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search"
+              disabled={isSearching}
               className="pl-9"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(event) => setSearchQuery(event.target.value)}
             />
             {/* Clears the search bar */}
             {searchQuery && <Button
               className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
+              disabled={isSearching}
               variant="ghost"
               type="button" // important so it doesn't submit
               onClick={() => setSearchQuery("")}
@@ -65,8 +76,11 @@ const MapWithSearch = () => {
               X
             </Button>}
           </div>
-          <Button type="submit">
-            <Sparkles />
+          <Button 
+            type="submit"
+            disabled={isSearching}
+          >
+            {!isSearching? <Sparkles /> : <Loader className="animate-spin"/>}
           </Button>
         </form>
       </div>
