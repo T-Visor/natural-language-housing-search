@@ -6,9 +6,6 @@ import { Client } from "@elastic/elasticsearch";
 import { z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 
-const ElasticQuery = z.object({
-});
-
 /**
  * Queries Elasticsearch using a natural language prompt.
  * 
@@ -73,6 +70,10 @@ const buildPrompt = (promptTemplate: string, jsonMapping: any, userQuery: string
  * @returns {Promise<string>} The generated Elasticsearch query as a JSON string.
  */
 const generateElasticQueryFromPrompt = async (prompt: string) => {
+  const ElasticQuerySchema = z.object({
+    query: z.object({}).passthrough() // allow nested objects like match, bool, etc.
+  });
+
   const response = await ollama.chat({
     model: CONFIG.LANGUAGE_MODEL_NAME,
     messages: [
@@ -82,7 +83,7 @@ const generateElasticQueryFromPrompt = async (prompt: string) => {
     options: {
       temperature: 0
     },
-    format: ElasticQuery
+    format: zodToJsonSchema(ElasticQuerySchema)
   });
 
   return response.message.content;
