@@ -9,10 +9,10 @@ import { Button } from "@/components/ui/button";
 import { Sparkles, Search, Loader } from "lucide-react";
 import useHousingCoordinates from "@/hooks/useHousingCoordinates";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
-import { 
-  CenterMapOnSelectedMarker, 
-  ResizeMapOnSidebarToggle, 
-  FitMapBoundsAroundMarkers 
+import {
+  CenterMapOnSelectedMarker,
+  ResizeMapOnSidebarToggle,
+  FitMapBoundsAroundMarkers
 } from "./MapEffects";
 import axios from "axios";
 
@@ -31,14 +31,23 @@ const MapWithSearch = () => {
   const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
 
   const handleFormSubmit = async (event: React.FormEvent) => {
-    event.preventDefault(); // prevents page from refreshing
+    // Prevents page from refreshing
+    event.preventDefault();
 
-    if (searchQuery.trim() === "") return;
-    
+    // Do nothing if search query is empty
+    if (!searchQuery?.trim()) return;
+
     setIsSearching(true);
-    const results = await axios.post("/api/query-elastic-using-nl", { query: searchQuery });
-    setIsSearching(false);
-    console.log(results);                          
+    try {
+      const response = await axios.post("/api/query-elastic-using-nl", {
+        query: searchQuery,
+      });
+      console.log("Success:", response.data);
+    } catch (error) {
+      console.error("Request failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
   }
 
   return (
@@ -76,11 +85,11 @@ const MapWithSearch = () => {
               X
             </Button>}
           </div>
-          <Button 
+          <Button
             type="submit"
             disabled={isSearching}
           >
-            {!isSearching? <Sparkles /> : <Loader className="animate-spin"/>}
+            {!isSearching ? <Sparkles /> : <Loader className="animate-spin" />}
           </Button>
         </form>
       </div>
@@ -109,7 +118,7 @@ const MapWithSearch = () => {
           />
         ))}
         <ResizeMapOnSidebarToggle />
-        {!mouseClickPoint && <FitMapBoundsAroundMarkers points={coordinates}/>}
+        {!mouseClickPoint && <FitMapBoundsAroundMarkers points={coordinates} />}
         <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>
