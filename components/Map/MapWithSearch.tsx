@@ -16,9 +16,9 @@ import {
 import axios from "axios";
 
 const customIcon = L.icon({
-  iconUrl: "/vercel.svg",
-  iconRetinaUrl: "/vercel.svg",
-  iconSize: [20, 20],
+  iconUrl: "/marker.png",
+  iconRetinaUrl: "/marker.png",
+  iconSize: [30, 30],
   iconAnchor: [16, 32],
 })
 
