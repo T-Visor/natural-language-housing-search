@@ -32,7 +32,10 @@
           "type": "float"
         },
         "state": {
-          "type": "keyword"
+          "type": "keyword",
+          "meta": {
+            "description": "Stored as two-letter state abbreviations (e.g., MD, CA, NY)"
+          }
         },
         "street_name": {
           "type": "keyword"

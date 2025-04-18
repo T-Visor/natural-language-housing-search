@@ -30,7 +30,7 @@ const MapWithSearch = () => {
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
   const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
 
-  const handleFormSubmit = async (event: React.FormEvent) => {
+  const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
     event.preventDefault();
 
@@ -61,7 +61,7 @@ const MapWithSearch = () => {
         <div className="h-6 w-px bg-gray-600" />
 
         <form
-          onSubmit={handleFormSubmit}
+          onSubmit={handleNaturalLanguageSearch}
           className="flex items-center space-x-3 w-full"
         >
           <div className="relative w-full">
