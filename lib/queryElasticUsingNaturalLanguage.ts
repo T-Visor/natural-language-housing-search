@@ -29,7 +29,7 @@ export const queryElasticUsingNaturalLanguage = async (query: string) => {
 
   const searchResults = await client.search({
     index: CONFIG.ELASTICSEARCH_INDEX,
-    body: elasticQueryAsJSON
+    body: elasticQueryAsJSON, size: 100
   }, { meta: true });
 
   return searchResults.body.hits.hits;
@@ -71,7 +71,7 @@ const buildPrompt = (promptTemplate: string, jsonMapping: any, userQuery: string
  */
 const generateElasticQueryFromPrompt = async (prompt: string) => {
   const ElasticQuerySchema = z.object({
-    query: z.object({}).passthrough() // allow nested objects like match, bool, etc.
+    query: z.object({}).passthrough(), // allow nested objects like match, bool, etc.
   });
 
   const response = await ollama.chat({

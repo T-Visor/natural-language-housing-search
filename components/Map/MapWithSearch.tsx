@@ -30,7 +30,6 @@ const MapWithSearch = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
 
-
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
     event.preventDefault();
@@ -108,7 +107,7 @@ const MapWithSearch = () => {
           attribution=""
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
         />
-        {searchResults.length > 0 && searchResults.map((result, index) => {
+        {searchResults?.length > 0 && searchResults.map((result, index) => {
           const point = result._source.location;
           return (
             <Marker
