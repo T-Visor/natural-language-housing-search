@@ -7,7 +7,6 @@ import L from "leaflet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Search, Loader } from "lucide-react";
-import useHousingCoordinates from "@/hooks/useHousingCoordinates";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import {
   CenterMapOnSelectedMarker,
@@ -26,9 +25,11 @@ const customIcon = L.icon({
 const MapWithSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const coordinates = useHousingCoordinates();
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
   const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
+  const searchResults = useSearchResultsStore((state) => state.searchResults);
+  const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
+
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
@@ -42,7 +43,7 @@ const MapWithSearch = () => {
       const response = await axios.post("/api/query-elastic-using-nl", {
         query: searchQuery,
       });
-      console.log("Success:", response.data);
+      setSearchResults(response.data);
     } catch (error) {
       console.error("Request failed:", error);
     } finally {
@@ -107,18 +108,23 @@ const MapWithSearch = () => {
           attribution=""
           url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
         />
-        {coordinates.map((point, index) => (
-          <Marker
-            key={index}
-            position={point}
-            icon={customIcon}
-            eventHandlers={{
-              click: () => setMouseClickPoint(point),
-            }}
-          />
-        ))}
+        {searchResults.length > 0 && searchResults.map((result, index) => {
+          const point = result._source.location;
+          return (
+            <Marker
+              key={result._id || index}
+              position={[point.lat, point.lon]}
+              icon={customIcon}
+              eventHandlers={{
+                click: () => setMouseClickPoint([point.lat, point.lon]),
+              }}
+            />
+          );
+        })}
         <ResizeMapOnSidebarToggle />
-        {!mouseClickPoint && <FitMapBoundsAroundMarkers points={coordinates} />}
+        {!mouseClickPoint && searchResults?.length > 0 && (
+          <FitMapBoundsAroundMarkers points={searchResults.map(hit => hit._source.location)} />
+        )}        
         <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>

@@ -4,5 +4,6 @@ import { queryElasticUsingNaturalLanguage } from '@/lib/queryElasticUsingNatural
 export async function POST(request: NextRequest) {
   const { query } = await request.json();
   const hitsFromElasticsearch = await queryElasticUsingNaturalLanguage(query);
+  console.log(hitsFromElasticsearch);
   return NextResponse.json(hitsFromElasticsearch);
 }
