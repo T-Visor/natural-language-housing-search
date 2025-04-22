@@ -6,7 +6,16 @@ import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Sparkles, Search, Loader } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
+import { Sparkles, Search, Loader, SlidersHorizontal } from "lucide-react";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import {
   CenterMapOnSelectedMarker,
@@ -29,6 +38,7 @@ const MapWithSearch = () => {
   const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
@@ -43,9 +53,11 @@ const MapWithSearch = () => {
         query: searchQuery,
       });
       setSearchResults(response.data);
-    } catch (error) {
+    }
+    catch (error) {
       console.error("Request failed:", error);
-    } finally {
+    }
+    finally {
       setIsSearching(false);
     }
   }
@@ -92,9 +104,35 @@ const MapWithSearch = () => {
             {!isSearching ? <Sparkles /> : <Loader className="animate-spin" />}
           </Button>
         </form>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button variant="ghost" disabled={isSearching}>
+              Filters
+              <SlidersHorizontal />
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="z-[9999]">
+            <DialogHeader>
+              <DialogTitle>Filter Criteria</DialogTitle>
+              <DialogDescription>
+                This action cannot be undone. This will permanently delete your account
+                and remove your data from our servers.
+              </DialogDescription>
+              <div className="flex flex-col items-center">
+                <Button className="w-xs">
+                  Submit
+                </Button>
+              </div>
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
 
-      {/* Interactive Map*/}
+      {/* Darken map container if dialog is open */}
+      {isDialogOpen && (
+        <div className="absolute inset-0 bg-black/40 z-[999] pointer-events-none" />
+      )}
+
       <MapContainer
         center={[39.2904, -76.6122]}
         zoom={5}
@@ -123,7 +161,7 @@ const MapWithSearch = () => {
         <ResizeMapOnSidebarToggle />
         {!mouseClickPoint && searchResults?.length > 0 && (
           <FitMapBoundsAroundMarkers points={searchResults.map(hit => hit._source.location)} />
-        )}        
+        )}
         <CenterMapOnSelectedMarker point={mouseClickPoint} />
       </MapContainer>
     </div>
