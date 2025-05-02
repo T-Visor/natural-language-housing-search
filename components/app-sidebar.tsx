@@ -8,6 +8,7 @@ import {
   SidebarGroupContent,
   SidebarHeader
 } from "@/components/ui/sidebar";
+import isEqual from 'lodash/isEqual';
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 
 const formatCurrency = (number: number) => {
@@ -19,8 +20,9 @@ const formatCurrency = (number: number) => {
 }
 
 const AppSidebar = () => {
+  const searchResult = useSearchResultsStore((state) => state.searchResult);
+  const setSearchResult = useSearchResultsStore((state) => state.setSearchResult);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
-  const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
 
   return (
     <Sidebar>
@@ -37,8 +39,8 @@ const AppSidebar = () => {
                   className="w-full rounded-md overflow-hidden"
                 >
                   <Button
-                    variant="ghost"
-                    onClick={() => setMouseClickPoint(result._source.location)}
+                    variant={isEqual(searchResult, [result._source.location.lat, result._source.location.lon]) ? "secondary" : "ghost"}
+                    onClick={() => setSearchResult([result._source.location.lat, result._source.location.lon])}
                     className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                   >
                     <div className="w-full flex flex-col">

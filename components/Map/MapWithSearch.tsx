@@ -35,7 +35,7 @@ const MapWithSearch = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
-  const setMouseClickPoint = useSearchResultsStore.getState().setSearchResult;
+  const setMouseClickPoint = useSearchResultsStore((state) => state.setSearchResult);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
