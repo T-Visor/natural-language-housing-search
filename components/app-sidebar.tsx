@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar";
 import isEqual from 'lodash/isEqual';
 import useSearchResultsStore from "@/store/useSearchResultsStore";
+import { useRef, useEffect } from "react";
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -22,7 +23,18 @@ const formatCurrency = (number: number) => {
 const AppSidebar = () => {
   const searchResult = useSearchResultsStore((state) => state.searchResult);
   const setSearchResult = useSearchResultsStore((state) => state.setSearchResult);
+  const searchResultReference = useRef<HTMLButtonElement|null>(null);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
+
+  // Auto-scroll to the selected search result in the sidebar
+  useEffect(() => {
+    if (searchResultReference.current) {
+      searchResultReference.current.scrollIntoView({ 
+        behavior: "smooth", 
+        block: "center"
+      })
+    }
+  }, [searchResult]);
 
   return (
     <Sidebar>
@@ -44,6 +56,7 @@ const AppSidebar = () => {
                     {/* Highlight this button if its coordinates match the currently selected location */}                    
                     <Button
                       variant={isEqual(searchResult, coordinates) ? "secondary" : "ghost"}
+                      ref={isEqual(searchResult, coordinates) ? searchResultReference : null}
                       onClick={() => setSearchResult(coordinates)}
                       className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
                     >
