@@ -63,9 +63,9 @@ const AppSidebar = () => {
                     >
                       <div className="w-full flex justify-center">
                       <Image
-                        src="/vercel.svg"
-                        width={70}
-                        height={20}
+                        src="/P5_ProtagonistHouseConceptArt.png"
+                        width={800}
+                        height={800}
                         alt="Blank image placeholder"
                       />
                       </div>
