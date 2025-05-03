@@ -97,6 +97,7 @@ const MapWithSearch = () => {
               X
             </Button>}
           </div>
+          {/* Submit button associated with search bar */}
           <Button
             type="submit"
             disabled={isSearching}
@@ -104,9 +105,14 @@ const MapWithSearch = () => {
             {!isSearching ? <Sparkles /> : <Loader className="animate-spin" />}
           </Button>
         </form>
+        <div className="h-7 w-px bg-gray-600" />
+        {/* 'Filters' button with pop-up dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button variant="ghost" disabled={isSearching}>
+            <Button 
+              variant="ghost" 
+              disabled={isSearching}
+            >
               Filters
               <SlidersHorizontal />
             </Button>
