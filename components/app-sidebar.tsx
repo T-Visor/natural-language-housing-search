@@ -11,6 +11,7 @@ import {
 import isEqual from 'lodash/isEqual';
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import { useRef, useEffect } from "react";
+import Image from "next/image"
 
 const formatCurrency = (number: number) => {
   return new Intl.NumberFormat('en-US', {
@@ -23,14 +24,14 @@ const formatCurrency = (number: number) => {
 const AppSidebar = () => {
   const searchResult = useSearchResultsStore((state) => state.searchResult);
   const setSearchResult = useSearchResultsStore((state) => state.setSearchResult);
-  const searchResultReference = useRef<HTMLButtonElement|null>(null);
+  const searchResultReference = useRef<HTMLButtonElement | null>(null);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
 
   // Auto-scroll to the selected search result in the sidebar
   useEffect(() => {
     if (searchResultReference.current) {
-      searchResultReference.current.scrollIntoView({ 
-        behavior: "smooth", 
+      searchResultReference.current.scrollIntoView({
+        behavior: "smooth",
         block: "center"
       })
     }
@@ -51,25 +52,33 @@ const AppSidebar = () => {
                 return (
                   <div
                     key={result._id}
-                    className="w-full rounded-md overflow-hidden"
+                    className="flex flex-col w-full rounded-md overflow-hidden"
                   >
-                    {/* Highlight this button if its coordinates match the currently selected location */}                    
+                    {/* Highlight this button if its coordinates match the currently selected location */}
                     <Button
                       variant={isEqual(searchResult, coordinates) ? "secondary" : "ghost"}
                       ref={isEqual(searchResult, coordinates) ? searchResultReference : null}
                       onClick={() => setSearchResult(coordinates)}
-                      className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800 transition"
+                      className="w-full h-auto text-left flex flex-col items-start py-2 rounded-md hover:bg-gray-800"
                     >
+                      <div className="w-full flex justify-center">
+                      <Image
+                        src="/vercel.svg"
+                        width={70}
+                        height={20}
+                        alt="Blank image placeholder"
+                      />
+                      </div>
                       <div className="w-full flex flex-col">
                         <span className="text-base font-medium text-white mb-1">
                           {`${formatCurrency(result._source.price)}`}
                         </span>
                         <span className="text-sm text-gray-400 mb-0.5">
                           {`${result._source.bedroom_number ?? 0} bed | 
-                          ${result._source.bathroom_number ?? 0} bath`}
+                            ${result._source.bathroom_number ?? 0} bath`}
                         </span>
                         <span className="text-sm text-gray-400 mb-0.5 truncate whitespace-pre-line">
-                          {result._source.address.replace(",", "\n")}
+                          {result._source.address}
                         </span>
                         <a
                           className="text-sm text-blue-500"

@@ -10,6 +10,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
  * Queries Elasticsearch using a natural language prompt.
  * 
  * @param {string} query - Natural language query input from the user.
+ * 
  * @returns {Promise<any[]>} Array of Elasticsearch search hits.
  */
 export const queryElasticUsingNaturalLanguage = async (query: string) => {
@@ -29,7 +30,8 @@ export const queryElasticUsingNaturalLanguage = async (query: string) => {
 
   const searchResults = await client.search({
     index: CONFIG.ELASTICSEARCH_INDEX,
-    body: elasticQueryAsJSON, size: 100
+    body: elasticQueryAsJSON, 
+    size: 100
   }, { meta: true });
 
   return searchResults.body.hits.hits;
@@ -39,6 +41,7 @@ export const queryElasticUsingNaturalLanguage = async (query: string) => {
  * Loads a JSON file from the local filesystem.
  * 
  * @param {string} jsonFilePath - Path to the JSON file.
+ * 
  * @returns {Promise<any>} Parsed JSON object.
  */
 const loadJsonFromFile = async (jsonFilePath: string) => {
@@ -52,6 +55,7 @@ const loadJsonFromFile = async (jsonFilePath: string) => {
  * @param {string} promptTemplate - The Mustache template string.
  * @param {any} jsonMapping - The Elasticsearch mapping schema.
  * @param {string} userQuery - The user’s natural language query.
+ * 
  * @returns {string} The rendered prompt.
  */
 const buildPrompt = (promptTemplate: string, jsonMapping: any, userQuery: string) => {
@@ -67,6 +71,7 @@ const buildPrompt = (promptTemplate: string, jsonMapping: any, userQuery: string
  * Generates an Elasticsearch query using a language model (Ollama).
  * 
  * @param {string} prompt - The formatted prompt string.
+ * 
  * @returns {Promise<string>} The generated Elasticsearch query as a JSON string.
  */
 const generateElasticQueryFromPrompt = async (prompt: string) => {
