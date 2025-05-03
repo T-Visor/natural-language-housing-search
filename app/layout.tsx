@@ -32,10 +32,10 @@ const RootLayout = ({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col overflow-hidden`}
       >
         <SidebarProvider defaultOpen={true}>
-          <AppSidebar />
           <main className="flex-grow">
             {children}
           </main>
+          <AppSidebar />
         </SidebarProvider>
       </body>
     </html>

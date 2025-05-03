@@ -37,7 +37,7 @@ const AppSidebar = () => {
   }, [searchResult]);
 
   return (
-    <Sidebar>
+    <Sidebar side="right">
       <SidebarHeader className="flex flex-col items-center justify-center space-y-2 p-4 border-b h-13">
         <h2 className="font-medium text-white">Search Results</h2>
       </SidebarHeader>

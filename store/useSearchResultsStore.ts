@@ -7,7 +7,7 @@ const useSearchResultsStore = create((set) => ({
 
   // Selected search result from list
   searchResult: null,
-  setSearchResult: (searchResult) => set({ searchResult }),
+  setSearchResult: (searchResult: [number, number]) => set({ searchResult }),
   unselectSearchResult: () => set({ searchResult: null }),
 }));
 

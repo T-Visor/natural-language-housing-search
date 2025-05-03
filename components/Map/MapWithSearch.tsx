@@ -67,17 +67,17 @@ const MapWithSearch = () => {
       <div className="py-2 flex items-center space-x-3 px-4 h-13 border-b">
 
         {/* Sidebar trigger button */}
-        <SidebarTrigger />
+        {/* <SidebarTrigger /> */}
 
         {/* Vertical line separator */}
-        <div className="h-6 w-px bg-gray-600" />
+        {/*<div className="h-6 w-px bg-gray-600" />*/}
 
         <form
           onSubmit={handleNaturalLanguageSearch}
           className="flex items-center space-x-3 w-full"
         >
+          {/* Search bar with icon */}
           <div className="relative w-full">
-            {/* Search bar with icon */}
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
               placeholder="Search"
