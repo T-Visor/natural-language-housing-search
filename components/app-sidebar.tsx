@@ -63,6 +63,7 @@ const AppSidebar = () => {
                     >
                       <div className="w-full flex justify-center">
                       <Image
+                        className="rounded-md"
                         src="/P5_ProtagonistHouseConceptArt.png"
                         width={800}
                         height={800}
@@ -70,7 +71,7 @@ const AppSidebar = () => {
                       />
                       </div>
                       <div className="w-full flex flex-col">
-                        <span className="text-base font-medium text-white mb-1">
+                        <span className="text-base font-large font-bold text-white mb-1">
                           {`${formatCurrency(result._source.price)}`}
                         </span>
                         <span className="text-sm text-gray-400 mb-0.5">
