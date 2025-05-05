@@ -12,26 +12,26 @@ import { useRef, useEffect } from "react";
 import { ListingButtonCard } from "@/components/listing-card";
 
 const AppSidebar = () => {
-  const searchResult = useSearchResultsStore((state) => state.searchResult);
-  const setSearchResult = useSearchResultsStore((state) => state.setSearchResult);
-  const searchResultReference = useRef<HTMLButtonElement | null>(null);
+  const selectedListing = useSearchResultsStore((state) => state.searchResult);
+  const setSelectedListing = useSearchResultsStore((state) => state.setSearchResult);
+  const selectedListingButtonRef = useRef<HTMLButtonElement | null>(null);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
 
   // Auto-scroll to the selected search result in the sidebar
   useEffect(() => {
-    if (searchResultReference.current) {
-      searchResultReference.current.scrollIntoView({
+    if (selectedListingButtonRef.current) {
+      selectedListingButtonRef.current.scrollIntoView({
         behavior: "smooth",
         block: "center"
       })
     }
-  }, [searchResult]);
+  }, [selectedListing]);
 
   return (
     <Sidebar side="right">
       <SidebarHeader className="flex flex-col items-center justify-center space-y-2 p-4 border-b h-13">
         <h2 className="font-medium text-white">
-          Search Results
+          Listings
         </h2>
       </SidebarHeader>
       <SidebarContent>
@@ -42,9 +42,9 @@ const AppSidebar = () => {
                 <ListingButtonCard
                   key={result._id}
                   result={result}
-                  searchResult={searchResult}
-                  searchResultReference={searchResultReference}
-                  setSearchResult={setSearchResult}
+                  searchResult={selectedListing}
+                  searchResultReference={selectedListingButtonRef}
+                  setSearchResult={setSelectedListing}
                 />
               )))}
             </div>

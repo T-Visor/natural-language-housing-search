@@ -7,7 +7,10 @@ const CenterMapOnSelectedMarker = ({ point }: { point: [number, number] | null }
 
   useEffect(() => {
     if (!point) return;
-    map.setView(point);
+    map.panTo(point, {
+      animate: true,
+      duration: 0.2,
+    });
   }, [point, map]);
 
   return null; // doesn't render anything visible

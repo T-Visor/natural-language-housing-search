@@ -43,9 +43,13 @@ const MapWithSearch = () => {
   const searchResult = useSearchResultsStore((state) => state.searchResult);
 
   useEffect(() => {
-    if (markerRef.current) {
-      markerRef.current.openPopup(); // Open popup when component mounts
-    }
+    if (!searchResult || !markerRef.current) return;
+  
+    const timeout = setTimeout(() => {
+      markerRef.current?.openPopup();
+    }, 500);
+  
+    return () => clearTimeout(timeout);
   }, [searchResult]);
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
