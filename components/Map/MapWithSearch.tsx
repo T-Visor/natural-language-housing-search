@@ -40,17 +40,16 @@ const MapWithSearch = () => {
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const markerRef = useRef(null);
-  const searchResult = useSearchResultsStore((state) => state.searchResult);
 
   useEffect(() => {
-    if (!searchResult || !markerRef.current) return;
+    if (!mouseClickPoint || !markerRef.current) return;
   
     const timeout = setTimeout(() => {
       markerRef.current?.openPopup();
     }, 500);
   
     return () => clearTimeout(timeout);
-  }, [searchResult]);
+  }, [mouseClickPoint]);
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
@@ -161,7 +160,7 @@ const MapWithSearch = () => {
           const point = result._source.location;
           return (
             <Marker
-              ref={isEqual(searchResult, [point.lat, point.lon]) ? markerRef : null}
+              ref={isEqual(mouseClickPoint, [point.lat, point.lon]) ? markerRef : null}
               key={result._id || index}
               position={[point.lat, point.lon]}
               icon={customIcon}
