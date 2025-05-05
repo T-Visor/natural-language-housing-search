@@ -39,13 +39,13 @@ const MapWithSearch = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const markerRef = useRef(null);
+  const selectedLeafletMarkerRef = useRef(null);
 
   useEffect(() => {
-    if (!mouseClickPoint || !markerRef.current) return;
+    if (!mouseClickPoint || !selectedLeafletMarkerRef.current) return;
   
     const timeout = setTimeout(() => {
-      markerRef.current?.openPopup();
+      selectedLeafletMarkerRef.current?.openPopup();
     }, 500);
   
     return () => clearTimeout(timeout);
@@ -160,7 +160,7 @@ const MapWithSearch = () => {
           const point = result._source.location;
           return (
             <Marker
-              ref={isEqual(mouseClickPoint, [point.lat, point.lon]) ? markerRef : null}
+              ref={isEqual(mouseClickPoint, [point.lat, point.lon]) ? selectedLeafletMarkerRef : null}
               key={result._id || index}
               position={[point.lat, point.lon]}
               icon={customIcon}
