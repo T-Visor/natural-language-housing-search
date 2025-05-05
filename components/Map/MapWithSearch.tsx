@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import L from "leaflet";
+import L, { marker } from "leaflet";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,6 +22,7 @@ import {
 } from "./MapEffects";
 import axios from "axios";
 import { ListingPopupForLeafletMarker } from "@/components/listing-card";
+import isEqual from 'lodash/isEqual';
 
 const customIcon = L.icon({
   iconUrl: "/marker.png",
@@ -38,6 +39,14 @@ const MapWithSearch = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const markerRef = useRef(null);
+  const searchResult = useSearchResultsStore((state) => state.searchResult);
+
+  useEffect(() => {
+    if (markerRef.current) {
+      markerRef.current.openPopup(); // Open popup when component mounts
+    }
+  }, [searchResult]);
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     // Prevents page from refreshing
@@ -148,6 +157,7 @@ const MapWithSearch = () => {
           const point = result._source.location;
           return (
             <Marker
+              ref={isEqual(searchResult, [point.lat, point.lon]) ? markerRef : null}
               key={result._id || index}
               position={[point.lat, point.lon]}
               icon={customIcon}
