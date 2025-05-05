@@ -1,7 +1,6 @@
 "use client";
 
-import { ReactEventHandler, useState } from "react";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useState } from "react";
 import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet";
 import { Input } from "@/components/ui/input";
@@ -14,7 +13,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
 import { Sparkles, Search, Loader, SlidersHorizontal } from "lucide-react";
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import {
@@ -23,6 +21,7 @@ import {
   FitMapBoundsAroundMarkers
 } from "./MapEffects";
 import axios from "axios";
+import { ListingPopupForLeafletMarker } from "@/components/listing-card";
 
 const customIcon = L.icon({
   iconUrl: "/marker.png",
@@ -49,9 +48,10 @@ const MapWithSearch = () => {
 
     setIsSearching(true);
     try {
-      const response = await axios.post("/api/query-elastic-using-nl", {
+      /*const response = await axios.post("/api/query-elastic-using-nl", {
         query: searchQuery,
-      });
+      });*/
+      const response = await axios.get("/api/test-housing-search");
       setSearchResults(response.data);
     }
     catch (error) {
@@ -65,18 +65,11 @@ const MapWithSearch = () => {
   return (
     <div className="h-full w-full">
       <div className="py-2 flex items-center space-x-3 px-4 h-13 border-b">
-
-        {/* Sidebar trigger button */}
-        {/* <SidebarTrigger /> */}
-
-        {/* Vertical line separator */}
-        {/*<div className="h-6 w-px bg-gray-600" />*/}
-
+        {/* Search bar with 'submit' button */}
         <form
           onSubmit={handleNaturalLanguageSearch}
           className="flex items-center space-x-3 w-full"
         >
-          {/* Search bar with icon */}
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <Input
@@ -97,7 +90,6 @@ const MapWithSearch = () => {
               X
             </Button>}
           </div>
-          {/* Submit button associated with search bar */}
           <Button
             type="submit"
             disabled={isSearching}
@@ -109,8 +101,9 @@ const MapWithSearch = () => {
         {/* 'Filters' button with pop-up dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
-            <Button 
-              variant="ghost" 
+            <Button
+              variant="ghost"
+              className="border-white"
               disabled={isSearching}
             >
               Filters
@@ -134,7 +127,7 @@ const MapWithSearch = () => {
         </Dialog>
       </div>
 
-      {/* Darken map container if dialog is open */}
+      {/* Darken map container if filters dialog is open */}
       {isDialogOpen && (
         <div className="absolute inset-0 bg-black/40 z-[999] pointer-events-none" />
       )}
@@ -161,7 +154,9 @@ const MapWithSearch = () => {
               eventHandlers={{
                 click: () => setMouseClickPoint([point.lat, point.lon]),
               }}
-            />
+            >
+              <ListingPopupForLeafletMarker result={result}/>
+            </Marker>
           );
         })}
         <ResizeMapOnSidebarToggle />

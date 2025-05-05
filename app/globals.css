@@ -120,3 +120,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* In your global CSS or a relevant stylesheet */
+.leaflet-popup-content-wrapper {
+  background: black !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.leaflet-popup-tip {
+  background: black !important;
+  box-shadow: none !important;
+}

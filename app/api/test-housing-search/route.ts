@@ -9,9 +9,9 @@ const {
 } = process.env;
 
 if (!ELASTICSEARCH_API_URL ||
-    !ELASTICSEARCH_USERNAME ||
-    !ELASTICSEARCH_PASSWORD ||
-    !ELASTICSEARCH_INDEX) {
+  !ELASTICSEARCH_USERNAME ||
+  !ELASTICSEARCH_PASSWORD ||
+  !ELASTICSEARCH_INDEX) {
   throw new Error("Missing required environment variables for Elasticsearch client.");
 }
 
@@ -23,13 +23,16 @@ const client = new Client({
   },
 });
 
-export async function POST(request: NextRequest) {
-  const body = await request.json();
-
+export async function GET() {
   const result = await client.search({
     index: ELASTICSEARCH_INDEX,
-    body
+    body: {
+      "query": {
+        "match_all": {}
+      },
+      size: 30
+    }
   });
 
-  return NextResponse.json(result.hits.hits);
+return NextResponse.json(result.hits.hits);
 }
