@@ -7,6 +7,16 @@ import {
   SidebarGroupContent,
   SidebarHeader
 } from "@/components/ui/sidebar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 import useSearchResultsStore from "@/store/useSearchResultsStore";
 import { useRef, useEffect } from "react";
 import { ListingButtonCard } from "@/components/listing-card";
@@ -30,7 +40,7 @@ const AppSidebar = () => {
   return (
     <Sidebar side="right">
       <SidebarHeader className="flex flex-col items-center justify-center space-y-2 p-4 border-b h-13">
-        <h2 className="font-medium text-white">
+        <h2 className="font-medium">
           Listings
         </h2>
       </SidebarHeader>
@@ -48,6 +58,21 @@ const AppSidebar = () => {
                 />
               )))}
             </div>
+            {(searchResults.length > 0) && <Pagination className="overflow-x-hidden">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink isActive>
+                    1
+                  </PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

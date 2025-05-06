@@ -7,6 +7,7 @@ const MapWithSearch = dynamic(() => import("@/components/Map/MapWithSearch"), {
   loading: () => <div className="text-white p-4">Loading map...</div>, // optional
 });
 
-export default function Home() {
+const Home = () => {
   return <MapWithSearch />;
 }
+export default Home;
