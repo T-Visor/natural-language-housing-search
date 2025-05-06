@@ -23,15 +23,15 @@ const ElasticQuerySchema = z.object({
 export type SearchFilters = z.infer<typeof searchFilterSchema>;
 
 // Extract prompt-friendly schema for Mustache
-const extractDescriptions = (schema: typeof searchFilterSchema): Record<string, string> => {
+const extractDescriptions = (schema: typeof searchFilterSchema): { key: string; description: string }[] => {
   const shape = schema.shape;
-  const output: Record<string, string> = {};
+  const output: { key: string; description: string }[] = [];
   for (const key in shape) {
     const description = (shape[key] as any)._def?.description ?? "unknown";
-    output[key] = description;
+    output.push({ key, description });
   }
   return output;
-}
+};
 
 const rawSystemPromptTemplate = `
 You are a strict JSON converter.
@@ -39,9 +39,9 @@ You are a strict JSON converter.
 Your job is to take natural language input and produce a JSON object that matches this schema:
 
 ###
-{{#each json_schema}}
-{{@key}}: {{this}}
-{{/each}}
+{{#json_schema}}
+{{key}}: {{description}}
+{{/json_schema}}
 ###
 
 Rules:
@@ -140,8 +140,8 @@ const executeElasticQuery = async (elasticQuery: typeof ElasticQuerySchema) => {
 
 export const queryElasticUsingNaturalLanguage = async (prompt: string) => {
   const generatedElasticsearchQuery  = await generateElasticQueryFromPrompt(prompt);
-  console.log(generatedElasticsearchQuery);
-  
+  console.log(JSON.stringify(generatedElasticsearchQuery));
+
   const hitsFromElasticsearch = await executeElasticQuery(generatedElasticsearchQuery);
   return hitsFromElasticsearch;
 }
