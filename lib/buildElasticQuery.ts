@@ -1,5 +1,8 @@
 import Mustache from "mustache";
 import { z } from "zod";
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import ollama from "ollama";
+import { Client } from "@elastic/elasticsearch";
 
 export const searchFilterSchema = z.object({
   price_min: z.number().optional().describe("number – Minimum listing price in USD"),
@@ -11,6 +14,10 @@ export const searchFilterSchema = z.object({
   city: z.string().optional().describe("string – City name to filter listings by"),
   state: z.string().optional().describe("string – Two-letter state abbreviation (e.g., MD)"),
   postcode: z.string().optional().describe("string – ZIP or postal code to filter listings by"),
+});
+
+const ElasticQuerySchema = z.object({
+  query: z.object({}).passthrough(), // allow nested objects like match, bool, etc.
 });
 
 export type SearchFilters = z.infer<typeof searchFilterSchema>;
@@ -42,62 +49,52 @@ Rules:
 - Output ONLY a plain JSON object with no explanation or formatting.
 `;
 
-export const getSystemPromptForLLM = () => {
+const getSystemPromptForLLM = () => {
   return Mustache.render(rawSystemPromptTemplate, {
     json_schema: extractDescriptions(searchFilterSchema)
   });
 };
 
 // 🔍 Build Elasticsearch query from parsed filters
-export const buildElasticQuery = ({
-  price_min,
-  price_max,
-  bedrooms_min,
-  bedrooms_max,
-  bathrooms_min,
-  bathrooms_max,
-  city,
-  state,
-  postcode
-}: SearchFilters) => {
+export const buildElasticQuery = (searchFilters: SearchFilters) => {
   const must = [];
 
-  if (bedrooms_min || bedrooms_max) {
+  if (searchFilters.bedrooms_min || searchFilters.bedrooms_max) {
     must.push({
       range: {
         bedroom_number: {
-          ...(bedrooms_min && { gte: bedrooms_min }),
-          ...(bedrooms_max && { lte: bedrooms_max })
+          ...(searchFilters.bedrooms_min && { gte: searchFilters.bedrooms_min }),
+          ...(searchFilters.bedrooms_max && { lte: searchFilters.bedrooms_max })
         }
       }
     });
   }
 
-  if (bathrooms_min || bathrooms_max) {
+  if (searchFilters.bathrooms_min || searchFilters.bathrooms_max) {
     must.push({
       range: {
         bathroom_number: {
-          ...(bathrooms_min && { gte: bathrooms_min }),
-          ...(bathrooms_max && { lte: bathrooms_max })
+          ...(searchFilters.bathrooms_min && { gte: searchFilters.bathrooms_min }),
+          ...(searchFilters.bathrooms_max && { lte: searchFilters.bathrooms_max })
         }
       }
     });
   }
 
-  if (price_min || price_max) {
+  if (searchFilters.price_min || searchFilters.price_max) {
     must.push({
       range: {
         price: {
-          ...(price_min && { gte: price_min }),
-          ...(price_max && { lte: price_max })
+          ...(searchFilters.price_min && { gte: searchFilters.price_min }),
+          ...(searchFilters.price_max && { lte: searchFilters.price_max })
         }
       }
     });
   }
 
-  if (city) must.push({ term: { city } });
-  if (postcode) must.push({ term: { postcode } });
-  if (state) must.push({ term: { state } });
+  if (searchFilters.city) must.push({ term: { city: searchFilters.city } });
+  if (searchFilters.postcode) must.push({ term: { postcode: searchFilters.postcode } });
+  if (searchFilters.state) must.push({ term: { state: searchFilters.state } });
 
   return {
     query: {
@@ -105,3 +102,46 @@ export const buildElasticQuery = ({
     }
   };
 };
+
+const generateElasticQueryFromPrompt = async (prompt: string) => {
+  const response = await ollama.chat({
+    model: "llama3.1:8b-instruct-q3_K_S",
+    messages: [
+      { role: "system", content: getSystemPromptForLLM() },
+      { role: "user", content: prompt }
+    ],
+    options: {
+      temperature: 0
+    },
+    format: zodToJsonSchema(searchFilterSchema)
+  });
+
+  const generatedSearchFilters = response.message.content;
+  return buildElasticQuery(JSON.parse(generatedSearchFilters));
+}
+
+const executeElasticQuery = async (elasticQuery: typeof ElasticQuerySchema) => {
+  const client = new Client({
+    node: process.env.ELASTICSEARCH_API_URL,
+    auth: {
+      username: process.env.ELASTICSEARCH_USERNAME!,
+      password: process.env.ELASTICSEARCH_PASSWORD!,
+    },
+  });
+
+  const searchResults = await client.search({
+    index: "real_estate",
+    body: elasticQuery,
+    size: 100
+  }, { meta: true });
+
+  return searchResults.body.hits.hits;
+}
+
+export const queryElasticUsingNaturalLanguage = async (prompt: string) => {
+  const generatedElasticsearchQuery  = await generateElasticQueryFromPrompt(prompt);
+  console.log(generatedElasticsearchQuery);
+  
+  const hitsFromElasticsearch = await executeElasticQuery(generatedElasticsearchQuery);
+  return hitsFromElasticsearch;
+}
