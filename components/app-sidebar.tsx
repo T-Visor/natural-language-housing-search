@@ -47,32 +47,42 @@ const AppSidebar = () => {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="p-2 overflow-auto">
-            <div className="grid grid-cols-1 gap-3">
-              {(searchResults.length > 0) && (searchResults.map((result) => (
-                <ListingButtonCard
-                  key={result._id}
-                  result={result}
-                  searchResult={selectedListing}
-                  searchResultReference={selectedListingButtonRef}
-                  setSearchResult={setSelectedListing}
-                />
-              )))}
+            {(searchResults.length > 0) ? (
+              <>
+                <div className="grid grid-cols-1 gap-3">
+                  {searchResults.map((result) => (
+                    <ListingButtonCard
+                      key={result._id}
+                      result={result}
+                      searchResult={selectedListing}
+                      searchResultReference={selectedListingButtonRef}
+                      setSearchResult={setSelectedListing}
+                    />
+                  ))}
+                </div>
+                <Pagination className="overflow-x-hidden">
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious href="#" />
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationLink isActive>
+                        1
+                      </PaginationLink>
+                    </PaginationItem>
+                    <PaginationItem>
+                      <PaginationNext href="#" />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </>
+            ) : (
+            <div className="flex items-center justify-center">
+              <span className="text-center text-muted-foreground">
+                No Results
+              </span>
             </div>
-            {(searchResults.length > 0) && <Pagination className="overflow-x-hidden">
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink isActive>
-                    1
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>}
+            )}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
