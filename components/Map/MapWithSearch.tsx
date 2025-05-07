@@ -60,10 +60,10 @@ const MapWithSearch = () => {
 
     setIsSearching(true);
     try {
-      const response = await axios.post("/api/query-elastic-using-nl", {
+      /*const response = await axios.post("/api/query-elastic-using-nl", {
         prompt: searchQuery,
-      });
-      //const response = await axios.get("/api/test-housing-search");
+      });*/
+      const response = await axios.get("/api/test-housing-search");
       setSearchResults(response.data);
     }
     catch (error) {

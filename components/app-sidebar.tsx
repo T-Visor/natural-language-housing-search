@@ -5,12 +5,12 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarHeader
+  SidebarHeader,
+  SidebarFooter
 } from "@/components/ui/sidebar";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
@@ -44,48 +44,50 @@ const AppSidebar = () => {
           Listings
         </h2>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent className="p-2 overflow-auto">
-            {(searchResults.length > 0) ? (
-              <>
-                <div className="grid grid-cols-1 gap-3">
-                  {searchResults.map((result) => (
-                    <ListingButtonCard
-                      key={result._id}
-                      result={result}
-                      searchResult={selectedListing}
-                      searchResultReference={selectedListingButtonRef}
-                      setSearchResult={setSelectedListing}
-                    />
-                  ))}
-                </div>
-                <Pagination className="overflow-x-hidden">
-                  <PaginationContent>
-                    <PaginationItem>
-                      <PaginationPrevious href="#" />
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationLink isActive>
-                        1
-                      </PaginationLink>
-                    </PaginationItem>
-                    <PaginationItem>
-                      <PaginationNext href="#" />
-                    </PaginationItem>
-                  </PaginationContent>
-                </Pagination>
-              </>
+            {searchResults.length > 0 ? (
+              <div className="grid grid-cols-1 gap-3">
+                {searchResults.map((result) => (
+                  <ListingButtonCard
+                    key={result._id}
+                    result={result}
+                    searchResult={selectedListing}
+                    searchResultReference={selectedListingButtonRef}
+                    setSearchResult={setSelectedListing}
+                  />
+                ))}
+              </div>
             ) : (
-            <div className="flex items-center justify-center">
-              <span className="text-center text-muted-foreground">
-                No Results
-              </span>
-            </div>
+              <div className="flex items-center justify-center">
+                <span className="text-center text-muted-foreground">
+                  No Results
+                </span>
+              </div>
             )}
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
+
+      {searchResults.length > 0 && (
+        <SidebarFooter className="border-t p-2">
+          <Pagination className="w-full justify-center">
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </SidebarFooter>
+      )}
     </Sidebar>
   )
 }
