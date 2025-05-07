@@ -16,10 +16,6 @@ export const searchFilterSchema = z.object({
   postcode: z.string().optional().describe("string – ZIP or postal code to filter listings by"),
 });
 
-const ElasticQuerySchema = z.object({
-  query: z.object({}).passthrough(), // allow nested objects like match, bool, etc.
-});
-
 export type SearchFilters = z.infer<typeof searchFilterSchema>;
 
 // Extract prompt-friendly schema for Mustache
@@ -103,7 +99,7 @@ export const buildElasticQuery = (searchFilters: SearchFilters) => {
   };
 };
 
-const generateElasticQueryFromPrompt = async (prompt: string) => {
+export const generateElasticQueryFromPrompt = async (prompt: string) => {
   const response = await ollama.chat({
     model: "llama3.1:8b-instruct-q3_K_S",
     messages: [
@@ -118,30 +114,4 @@ const generateElasticQueryFromPrompt = async (prompt: string) => {
 
   const generatedSearchFilters = response.message.content;
   return buildElasticQuery(JSON.parse(generatedSearchFilters));
-}
-
-const executeElasticQuery = async (elasticQuery: typeof ElasticQuerySchema) => {
-  const client = new Client({
-    node: process.env.ELASTICSEARCH_API_URL,
-    auth: {
-      username: process.env.ELASTICSEARCH_USERNAME!,
-      password: process.env.ELASTICSEARCH_PASSWORD!,
-    },
-  });
-
-  const searchResults = await client.search({
-    index: "real_estate",
-    body: elasticQuery,
-    size: 100
-  }, { meta: true });
-
-  return searchResults.body.hits.hits;
-}
-
-export const queryElasticUsingNaturalLanguage = async (prompt: string) => {
-  const generatedElasticsearchQuery  = await generateElasticQueryFromPrompt(prompt);
-  console.log(JSON.stringify(generatedElasticsearchQuery));
-
-  const hitsFromElasticsearch = await executeElasticQuery(generatedElasticsearchQuery);
-  return hitsFromElasticsearch;
 }
