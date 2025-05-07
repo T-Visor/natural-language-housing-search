@@ -36,8 +36,7 @@ export async function POST(request: NextRequest) {
       queryCache.set(prompt, elasticQuery);
     }
 
-    const hitsFromElasticsearch = await executeElasticQuery(elasticQuery);
-    return NextResponse.json(hitsFromElasticsearch);
+    return NextResponse.json(await getHitsFromElasticsearch(elasticQuery));
   } 
   catch (error: any) {
     console.error("Error processing request:", error);
@@ -45,7 +44,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-const executeElasticQuery = async (elasticQuery: ElasticQuery) => {
+const getHitsFromElasticsearch = async (elasticQuery: ElasticQuery) => {
   const client = new Client({
     node: process.env.ELASTICSEARCH_API_URL,
     auth: {
