@@ -9,6 +9,10 @@ const useSearchResultsStore = create((set) => ({
   searchResult: null,
   setSearchResult: (searchResult: [number, number]) => set({ searchResult }),
   unselectSearchResult: () => set({ searchResult: null }),
+
+  // Pagination
+  pageForSearchResults: 1,
+  setPageForSearchResults: (pageForSearchResults) => set({ pageForSearchResults })
 }));
 
 export default useSearchResultsStore;

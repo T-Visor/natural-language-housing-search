@@ -26,6 +26,8 @@ const AppSidebar = () => {
   const setSelectedListing = useSearchResultsStore((state) => state.setSearchResult);
   const selectedListingButtonRef = useRef<HTMLButtonElement | null>(null);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
+  const pageForSearchResults = useSearchResultsStore((state) => state.pageForSearchResults);
+  const setPageForSearchResults = useSearchResultsStore((state) => state.setPageForSearchResults);
 
   // Auto-scroll to the selected search result in the sidebar
   useEffect(() => {
@@ -76,13 +78,23 @@ const AppSidebar = () => {
           <Pagination className="w-full justify-center">
             <PaginationContent>
               <PaginationItem>
-                <PaginationPrevious href="#" />
+                {pageForSearchResults > 1 && <PaginationPrevious
+                  onClick={() => {
+                    setPageForSearchResults(pageForSearchResults - 1);
+                  }}
+                />}
               </PaginationItem>
               <PaginationItem>
-                <PaginationLink isActive>1</PaginationLink>
+                <PaginationLink isActive>
+                  {pageForSearchResults}
+                </PaginationLink>
               </PaginationItem>
               <PaginationItem>
-                <PaginationNext href="#" />
+                <PaginationNext
+                  onClick={() => {
+                    setPageForSearchResults(pageForSearchResults + 1);
+                  }}
+                />
               </PaginationItem>
             </PaginationContent>
           </Pagination>

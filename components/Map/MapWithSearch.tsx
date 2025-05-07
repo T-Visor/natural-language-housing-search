@@ -38,41 +38,49 @@ const MapWithSearch = () => {
   const setMouseClickPoint = useSearchResultsStore((state) => state.setSearchResult);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const setSearchResults = useSearchResultsStore((state) => state.setSearchResults);
+  const pageForSearchResults = useSearchResultsStore((state) => state.pageForSearchResults);
+  const setPageForSearchResults = useSearchResultsStore((state) => state.setPageForSearchResults);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const selectedLeafletMarkerRef = useRef(null);
 
+  const fetchSearchResults = async (query: string, page: number) => {
+    setIsSearching(true);
+    try {
+      const response = await axios.post("/api/query-elastic-using-nl", {
+        prompt: query,
+        pageNumber: page
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Request failed:", error);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
   useEffect(() => {
     if (!mouseClickPoint || !selectedLeafletMarkerRef.current) return;
-  
+
     const timeout = setTimeout(() => {
       selectedLeafletMarkerRef.current?.openPopup();
     }, 500);
-  
+
     return () => clearTimeout(timeout);
   }, [mouseClickPoint]);
 
-  const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
-    // Prevents page from refreshing
-    event.preventDefault();
+  useEffect(() => {
+    if (!searchQuery) return; // Optional safeguard
+    fetchSearchResults(searchQuery, pageForSearchResults);
+  }, [pageForSearchResults]);
 
-    // Do nothing if search query is empty
+  const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
+    event.preventDefault();
     if (!searchQuery?.trim()) return;
 
-    setIsSearching(true);
-    try {
-      /*const response = await axios.post("/api/query-elastic-using-nl", {
-        prompt: searchQuery,
-      });*/
-      const response = await axios.get("/api/test-housing-search");
-      setSearchResults(response.data);
-    }
-    catch (error) {
-      console.error("Request failed:", error);
-    }
-    finally {
-      setIsSearching(false);
-    }
-  }
+    // Always reset to page 1 for a new query
+    setPageForSearchResults(1);
+    fetchSearchResults(searchQuery, pageForSearchResults);
+  };
 
   return (
     <div className="h-full w-full">
@@ -162,7 +170,7 @@ const MapWithSearch = () => {
                 click: () => setMouseClickPoint([point.lat, point.lon]),
               }}
             >
-              <ListingPopupForLeafletMarker result={result}/>
+              <ListingPopupForLeafletMarker result={result} />
             </Marker>
           );
         })}

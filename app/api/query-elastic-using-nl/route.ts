@@ -3,8 +3,7 @@ import { generateElasticQueryFromPrompt } from "@/lib/buildElasticQuery";
 import { z } from "zod";
 import { Client } from "@elastic/elasticsearch";
 
-const ELASTIC_HITS_SIZE: number = 20;
-const ELASTIC_HITS_START_INDEX: number = 0;
+const ELASTIC_HITS_SIZE: number = 10;
 
 // Zod schema to validate elastic query structure
 const ElasticQuerySchema = z.object({
@@ -19,11 +18,17 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const prompt = body?.prompt?.trim();
+    const pageNumber = body?.pageNumber;
 
     if (!prompt) {
       return NextResponse.json({ 
         error: "Missing or empty 'prompt' field" 
       }, { status: 400 });
+    }
+    if (!pageNumber) {
+      return NextResponse.json({
+        error: "Missing or empty 'pageNumber' field"
+      }, { status: 400 })
     }
 
     let elasticQuery: ElasticQuery;
@@ -40,7 +45,9 @@ export async function POST(request: NextRequest) {
     }
 
     console.log(JSON.stringify(elasticQuery));
-    return NextResponse.json(await getHitsFromElasticsearch(elasticQuery, ELASTIC_HITS_START_INDEX, ELASTIC_HITS_SIZE));
+
+    const start: number = (pageNumber - 1) * ELASTIC_HITS_SIZE;
+    return NextResponse.json(await getHitsFromElasticsearch(elasticQuery, start, ELASTIC_HITS_SIZE));
   } 
   catch (error: any) {
     console.error("Error processing request:", error);
