@@ -3,6 +3,9 @@ import { generateElasticQueryFromPrompt } from "@/lib/buildElasticQuery";
 import { z } from "zod";
 import { Client } from "@elastic/elasticsearch";
 
+const ELASTIC_HITS_SIZE: number = 20;
+const ELASTIC_HITS_START_INDEX: number = 0;
+
 // Zod schema to validate elastic query structure
 const ElasticQuerySchema = z.object({
   query: z.object({}).passthrough(),
@@ -36,7 +39,8 @@ export async function POST(request: NextRequest) {
       queryCache.set(prompt, elasticQuery);
     }
 
-    return NextResponse.json(await getHitsFromElasticsearch(elasticQuery));
+    console.log(JSON.stringify(elasticQuery));
+    return NextResponse.json(await getHitsFromElasticsearch(elasticQuery, ELASTIC_HITS_START_INDEX, ELASTIC_HITS_SIZE));
   } 
   catch (error: any) {
     console.error("Error processing request:", error);
@@ -44,7 +48,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
-const getHitsFromElasticsearch = async (elasticQuery: ElasticQuery) => {
+const getHitsFromElasticsearch = async (
+  elasticQuery: ElasticQuery, 
+  from: number, 
+  size: number
+) => {
   const client = new Client({
     node: process.env.ELASTICSEARCH_API_URL,
     auth: {
@@ -54,10 +62,12 @@ const getHitsFromElasticsearch = async (elasticQuery: ElasticQuery) => {
   });
 
   const searchResults = await client.search({
+    from: from,
     index: "real_estate",
     body: elasticQuery,
-    size: 100
+    size: size
   }, { meta: true });
 
+
   return searchResults.body.hits.hits;
-};
+}

@@ -126,14 +126,8 @@ const MapWithSearch = () => {
             <DialogHeader>
               <DialogTitle>Filter Criteria</DialogTitle>
               <DialogDescription>
-                This action cannot be undone. This will permanently delete your account
-                and remove your data from our servers.
+                Nothing to see here - this still needs to be implemented!
               </DialogDescription>
-              <div className="flex flex-col items-center">
-                <Button className="w-xs">
-                  Submit
-                </Button>
-              </div>
             </DialogHeader>
           </DialogContent>
         </Dialog>

@@ -2,7 +2,6 @@ import Mustache from "mustache";
 import { z } from "zod";
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import ollama from "ollama";
-import { Client } from "@elastic/elasticsearch";
 
 export const searchFilterSchema = z.object({
   price_min: z.number().optional().describe("number – Minimum listing price in USD"),
