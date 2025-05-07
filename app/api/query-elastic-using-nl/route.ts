@@ -15,7 +15,7 @@ const queryCache = new Map<string, ElasticQuery>();
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const prompt = body?.prompt?.trim(); // changed to "prompt" for clarity
+    const prompt = body?.prompt?.trim();
 
     if (!prompt) {
       return NextResponse.json({ 
@@ -23,26 +23,24 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
+    let elasticQuery: ElasticQuery;
+
     if (queryCache.has(prompt)) {
-      console.log(`🔁 Cache hit for: "${prompt}"`);
-      return NextResponse.json(queryCache.get(prompt));
+      console.log(`Cache hit for: "${prompt}"`);
+      elasticQuery = queryCache.get(prompt)!;
+    }
+    else {
+      console.log(`Generating and executing query for: "${prompt}"`);
+      elasticQuery = await generateElasticQueryFromPrompt(prompt);
+      ElasticQuerySchema.parse(elasticQuery);
+      queryCache.set(prompt, elasticQuery);
     }
 
-    console.log(`⚙️ Generating and executing query for: "${prompt}"`);
-    const generatedElasticQuery: ElasticQuery = await generateElasticQueryFromPrompt(prompt);
-
-    // Validate the structure matches the expected schema
-    ElasticQuerySchema.parse(generatedElasticQuery);
-
-    const hitsFromElasticsearch = await executeElasticQuery(generatedElasticQuery);
-
-    // Only cache if no error occurred
-    queryCache.set(prompt, hitsFromElasticsearch);
-
+    const hitsFromElasticsearch = await executeElasticQuery(elasticQuery);
     return NextResponse.json(hitsFromElasticsearch);
   } 
   catch (error: any) {
-    console.error("❌ Error processing request:", error);
+    console.error("Error processing request:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }
