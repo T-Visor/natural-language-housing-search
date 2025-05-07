@@ -9,8 +9,8 @@ const ElasticQuerySchema = z.object({
 });
 type ElasticQuery = z.infer<typeof ElasticQuerySchema>;
 
-// In-memory cache (key: prompt string, value: search results)
-const queryCache = new Map<string, any>();
+// In-memory cache (key: prompt string, value: Elasticsearch query)
+const queryCache = new Map<string, ElasticQuery>();
 
 export async function POST(request: NextRequest) {
   try {
