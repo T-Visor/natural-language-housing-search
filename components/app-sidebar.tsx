@@ -24,6 +24,7 @@ import { ListingButtonCard } from "@/components/listing-card";
 const AppSidebar = () => {
   const selectedListing = useSearchResultsStore((state) => state.searchResult);
   const setSelectedListing = useSearchResultsStore((state) => state.setSearchResult);
+  const unselectListing = useSearchResultsStore((state) => state.unselectSearchResult);
   const selectedListingButtonRef = useRef<HTMLButtonElement | null>(null);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const pageForSearchResults = useSearchResultsStore((state) => state.pageForSearchResults);
@@ -79,9 +80,11 @@ const AppSidebar = () => {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  className={pageForSearchResults === 1 ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}
+                  className={pageForSearchResults === 1 ? 
+                             "opacity-50 pointer-events-none cursor-not-allowed" : ""}
                   onClick={() => {
                     if (pageForSearchResults > 1) {
+                      unselectListing();
                       setPageForSearchResults(pageForSearchResults - 1);
                     }
                   }}
@@ -95,6 +98,7 @@ const AppSidebar = () => {
               <PaginationItem>
                 <PaginationNext
                   onClick={() => {
+                    unselectListing();
                     setPageForSearchResults(pageForSearchResults + 1);
                   }}
                 />
