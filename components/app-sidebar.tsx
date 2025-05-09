@@ -78,11 +78,14 @@ const AppSidebar = () => {
           <Pagination className="w-full justify-center">
             <PaginationContent>
               <PaginationItem>
-                {pageForSearchResults > 1 && <PaginationPrevious
+                <PaginationPrevious
+                  className={pageForSearchResults === 1 ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}
                   onClick={() => {
-                    setPageForSearchResults(pageForSearchResults - 1);
+                    if (pageForSearchResults > 1) {
+                      setPageForSearchResults(pageForSearchResults - 1);
+                    }
                   }}
-                />}
+                />
               </PaginationItem>
               <PaginationItem>
                 <PaginationLink isActive>
