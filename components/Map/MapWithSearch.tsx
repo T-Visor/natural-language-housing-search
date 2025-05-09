@@ -32,10 +32,12 @@ const customIcon = L.icon({
 })
 
 const MapWithSearch = () => {
-  //const [isSearching, setIsSearching] = useState(false);
+  const unselectListing = useSearchResultsStore((state) => state.unselectSearchResult);
   const isSearching = useSearchResultsStore((state) => state.isSearching);
   const setIsSearching = useSearchResultsStore((state) => state.setIsSearching);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [userInput, setUserInput] = useState("");
+  const searchQuery = useSearchResultsStore((state) => state.searchQuery);
+  const setSearchQuery = useSearchResultsStore((state) => state.setSearchQuery);
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
   const setMouseClickPoint = useSearchResultsStore((state) => state.setSearchResult);
   const searchResults = useSearchResultsStore((state) => state.searchResults);
@@ -46,6 +48,7 @@ const MapWithSearch = () => {
   const selectedLeafletMarkerRef = useRef(null);
 
   const fetchSearchResults = async (query: string, page: number) => {
+    unselectListing();
     setIsSearching(true);
     try {
       const response = await axios.post("/api/query-elastic-using-nl", {
@@ -77,12 +80,14 @@ const MapWithSearch = () => {
 
   const handleNaturalLanguageSearch = async (event: React.FormEvent) => {
     event.preventDefault();
-    if (!searchQuery?.trim()) return;
-
-    // Always reset to page 1 for a new query
+    if (!userInput?.trim()) return;
+  
+    // Update store but don't rely on it yet
+    setSearchQuery(userInput);
+  
+    // Use the local value directly
     setPageForSearchResults(1);
-    fetchSearchResults(searchQuery, pageForSearchResults);
-  };
+  };  
 
   return (
     <div className="h-full w-full">
@@ -98,16 +103,16 @@ const MapWithSearch = () => {
               placeholder="Search"
               disabled={isSearching}
               className="pl-9"
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
+              value={userInput}
+              onChange={(event) => setUserInput(event.target.value)}
             />
             {/* Clears the search bar */}
-            {searchQuery && <Button
+            {userInput && <Button
               className="absolute right-2 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400"
               disabled={isSearching}
               variant="ghost"
               type="button" // important so it doesn't submit
-              onClick={() => setSearchQuery("")}
+              onClick={() => setUserInput("")}
             >
               X
             </Button>}

@@ -12,6 +12,10 @@ interface SearchResultsStore {
   setSearchResult: (result: [number, number]) => void;
   unselectSearchResult: () => void;
 
+  // Search query
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+
   // loading state
   isSearching: boolean;
   setIsSearching: (status: boolean) => void;
@@ -28,6 +32,9 @@ const useSearchResultsStore = create<SearchResultsStore>((set) => ({
   searchResult: null,
   setSearchResult: (result) => set({ searchResult: result }),
   unselectSearchResult: () => set({ searchResult: null }),
+
+  searchQuery: "",
+  setSearchQuery: (query) => set({ searchQuery: query }),
 
   isSearching: false,
   setIsSearching: (status) => set({ isSearching: status }),
