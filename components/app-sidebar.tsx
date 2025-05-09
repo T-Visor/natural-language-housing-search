@@ -29,6 +29,12 @@ const AppSidebar = () => {
   const searchResults = useSearchResultsStore((state) => state.searchResults);
   const pageForSearchResults = useSearchResultsStore((state) => state.pageForSearchResults);
   const setPageForSearchResults = useSearchResultsStore((state) => state.setPageForSearchResults);
+  const topOfScrollableAreaRef = useRef<HTMLDivElement | null>(null);
+
+  // Scroll to top of sidebar when results are paginated
+  useEffect(() => {
+    topOfScrollableAreaRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [searchResults]);
 
   // Auto-scroll to the selected search result in the sidebar
   useEffect(() => {
@@ -49,7 +55,7 @@ const AppSidebar = () => {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
+        <SidebarGroup ref={topOfScrollableAreaRef}>
           <SidebarGroupContent className="p-2 overflow-auto">
             {searchResults.length > 0 ? (
               <div className="grid grid-cols-1 gap-3">
