@@ -85,7 +85,11 @@ const MapWithSearch = () => {
     // Update store but don't rely on it yet
     setSearchQuery(userInput);
   
-    // Use the local value directly
+    // Fetch search results for the first page
+    await fetchSearchResults(userInput, 1);
+
+    // Update the page value afterward so the UI doesn't load the page number
+    // before the results are fetched
     setPageForSearchResults(1);
   };  
 
