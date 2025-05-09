@@ -22,6 +22,7 @@ import { useRef, useEffect } from "react";
 import { ListingButtonCard } from "@/components/listing-card";
 
 const AppSidebar = () => {
+  const isSearching = useSearchResultsStore((state) => state.isSearching);
   const selectedListing = useSearchResultsStore((state) => state.searchResult);
   const setSelectedListing = useSearchResultsStore((state) => state.setSearchResult);
   const unselectListing = useSearchResultsStore((state) => state.unselectSearchResult);
@@ -31,7 +32,7 @@ const AppSidebar = () => {
   const setPageForSearchResults = useSearchResultsStore((state) => state.setPageForSearchResults);
   const topOfScrollableAreaRef = useRef<HTMLDivElement | null>(null);
 
-  // Scroll to top of sidebar when results are paginated
+  // Scroll to top of search results when new ones are fetched via pagination
   useEffect(() => {
     topOfScrollableAreaRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [searchResults]);
@@ -47,7 +48,10 @@ const AppSidebar = () => {
   }, [selectedListing]);
 
   return (
-    <Sidebar side="right">
+    <Sidebar 
+      side="right" 
+      className={isSearching ? "opacity-50 pointer-events-none cursor-not-allowed" : ""}
+    >
       <SidebarHeader className="flex flex-col items-center justify-center space-y-2 p-4 border-b h-13">
         <h2 className="font-medium">
           Listings

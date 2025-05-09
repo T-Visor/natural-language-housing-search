@@ -32,7 +32,9 @@ const customIcon = L.icon({
 })
 
 const MapWithSearch = () => {
-  const [isSearching, setIsSearching] = useState(false);
+  //const [isSearching, setIsSearching] = useState(false);
+  const isSearching = useSearchResultsStore((state) => state.isSearching);
+  const setIsSearching = useSearchResultsStore((state) => state.setIsSearching);
   const [searchQuery, setSearchQuery] = useState("");
   const mouseClickPoint = useSearchResultsStore((state) => state.searchResult);
   const setMouseClickPoint = useSearchResultsStore((state) => state.setSearchResult);
