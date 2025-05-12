@@ -42,6 +42,52 @@ Your job is to take natural language input and produce a JSON object that matche
 Rules:
 - Only include fields that are present or implied in the input.
 - Output ONLY a plain JSON object with no explanation or formatting.
+
+Examples:
+
+Input:  
+I'd like to see homes in Baltimore, MD with at least 2 bedrooms and 1 bathroom.  
+Output:  
+{  
+  "city": "Baltimore",  
+  "state": "MD",  
+  "bedrooms_min": 2,  
+  "bathrooms_min": 1  
+}
+
+Input:  
+Show me listings under $900,000 with 4+ bedrooms anywhere in California.  
+Output:  
+{  
+  "price_max": 900000,  
+  "bedrooms_min": 4,  
+  "state": "CA"  
+}
+
+Input:  
+Find houses with at least 3 bathrooms in 21218.  
+Output:  
+{  
+  "bathrooms_min": 3,  
+  "postcode": "21218"  
+}
+
+Input:  
+Looking for something cheap in Miami, FL.  
+Output:  
+{  
+  "city": "Miami",  
+  "state": "FL"  
+}
+
+Input:  
+Homes between $200,000 and $500,000 in Denver.  
+Output:  
+{  
+  "price_min": 200000,  
+  "price_max": 500000,  
+  "city": "Denver"  
+}
 `;
 
 const getSystemPromptForLLM = () => {
@@ -100,7 +146,7 @@ export const buildElasticQuery = (searchFilters: SearchFilters) => {
 
 export const generateElasticQueryFromPrompt = async (prompt: string) => {
   const response = await ollama.chat({
-    model: "llama3.1:8b-instruct-q3_K_S",
+    model: "gemma3:4b-it-qat",
     messages: [
       { role: "system", content: getSystemPromptForLLM() },
       { role: "user", content: prompt }
