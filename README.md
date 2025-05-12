@@ -1,5 +1,7 @@
 # 🏡 Real Estate Search App
 
+![Homepage Screenshot](./housing-search-screenshot.png)
+
 This is a full-stack real estate search application that integrates **natural language search** using LLM inference via **Ollama**, fast filtering via **Elasticsearch**, and a modern **Next.js** frontend. It allows users to explore homes for sale with a seamless and intuitive interface.
 
 ## 🚀 Features
