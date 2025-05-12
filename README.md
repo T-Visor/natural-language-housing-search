@@ -1,36 +1,123 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏡 Real Estate Search App
 
-## Getting Started
+This is a full-stack real estate search application that integrates **natural language search** using LLM inference via **Ollama**, fast filtering via **Elasticsearch**, and a modern **Next.js** frontend. It allows users to explore homes for sale with a seamless and intuitive interface.
 
-First, run the development server:
+## 🚀 Features
+
+* 🌐 Search for homes using natural language
+* ⚡️ Fast, faceted filtering with Elasticsearch
+* 🧠 Local LLM inference using Ollama
+* 🗺️ Interactive frontend using React/Next.js
+* 🐳 Docker-ready setup for Ollama and Elasticsearch
+
+---
+
+## 🧱 Prerequisites
+
+Ensure the following are installed:
+
+* **Docker** (for running Ollama and Elasticsearch locally)
+* **Python 3.9+**
+* **Node.js 18+**
+* **npm** or **yarn**
+
+---
+
+## 🛠️ Setup Instructions
+
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/your-username/real-estate-search-app.git
+cd real-estate-search-app
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 2. Start Local Services (Elasticsearch & Ollama)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can use Docker to run both services locally:
 
-## Learn More
+#### Start Elasticsearch
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker run -d --name es -p 9200:9200 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Start Ollama and Download Model
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+docker run -d --name ollama -p 11434:11434 ollama/ollama
+```
 
-## Deploy on Vercel
+Once running:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+ollama pull llama3.1:8b-instruct-q3_K_S
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+> 💡 Make sure port `11434` is available and not blocked by firewall or VPN.
+
+---
+
+### 3. Download Dataset
+
+Download the dataset from Kaggle and place it in the following path:
+
+* [Kaggle Dataset](https://www.kaggle.com/datasets/polartech/500000-us-homes-data-for-sale-properties?resource=download)
+* Rename and move the file to:
+  `backend/data/input_file.csv`
+
+---
+
+### 4. Install Python Dependencies
+
+```bash
+cd backend
+pip install -r requirements.txt
+```
+
+---
+
+### 5. Load Data into Elasticsearch
+
+```bash
+python real_estate_bulk_builder.py
+```
+
+This script parses the dataset and indexes it into Elasticsearch.
+
+---
+
+### 6. Build and Start Frontend
+
+```bash
+cd ..
+npm install
+npm run build
+npm run start
+```
+
+---
+
+## 🌐 Access the App
+
+Open your browser and visit:
+
+```
+http://localhost:3000
+```
+
+---
+
+## 📄 License
+
+This project is released under the [MIT License](LICENSE).
+
+---
+
+## Acknowledgements
+
+* Dataset by [Polartech on Kaggle](https://www.kaggle.com/datasets/polartech/500000-us-homes-data-for-sale-properties)
+* Ollama for local LLM inference
+* Elasticsearch for powerful search capabilities
